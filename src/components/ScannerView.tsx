@@ -136,19 +136,19 @@ export default function ScannerView() {
 
       {/* ボトムナビゲーションバー */}
       <div
-        className="absolute bottom-0 left-0 right-0 z-20 bg-white border-t border-gray-100 flex flex-col"
+        className="absolute bottom-0 left-0 right-0 z-20 bg-white border-t border-gray-100"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div className="flex items-center justify-center justify-around h-16 px-8">
-          <div className="flex flex-col items-center gap-0.5">
+        <div className="flex items-center justify-around h-16 px-8">
+          <div className="flex flex-col items-center justify-center gap-0.5">
             <Home className="w-5 h-5 text-gray-400" />
             <span className="text-[10px] text-gray-400">ホーム</span>
           </div>
-          <div className="flex flex-col items-center gap-0.5">
+          <div className="flex flex-col items-center justify-center gap-0.5">
             <QrCode className="w-6 h-6" style={{ color: themeColor }} />
             <span className="text-[10px] font-bold" style={{ color: themeColor }}>スキャン</span>
           </div>
-          <div className="flex flex-col items-center gap-0.5">
+          <div className="flex flex-col items-center justify-center gap-0.5">
             <Clock className="w-5 h-5 text-gray-400" />
             <span className="text-[10px] text-gray-400">履歴</span>
           </div>
