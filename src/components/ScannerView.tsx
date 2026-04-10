@@ -136,10 +136,10 @@ export default function ScannerView() {
 
       {/* ボトムナビゲーションバー */}
       <div
-        className="absolute bottom-0 left-0 right-0 z-20 bg-white border-t border-gray-100"
+        className="absolute bottom-0 left-0 right-0 z-20 bg-white border-t border-gray-100 flex flex-col"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div className="flex items-center justify-around h-16 px-8">
+        <div className="flex items-center justify-center justify-around h-16 px-8">
           <div className="flex flex-col items-center gap-0.5">
             <Home className="w-5 h-5 text-gray-400" />
             <span className="text-[10px] text-gray-400">ホーム</span>
