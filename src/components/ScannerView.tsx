@@ -8,6 +8,7 @@ import {
   NeonOverlay,
   FriendlyOverlay,
 } from './scanner-patterns';
+import SettingsDrawer from './SettingsDrawer';
 import type { ComponentType } from 'react';
 
 interface OverlayProps {
@@ -54,6 +55,9 @@ export default function ScannerView() {
 
       {/* パターン別オーバーレイ */}
       <OverlayComponent themeColor={themeColor} />
+
+      {/* 設定ドロワー（チートタップのstopPropagationが効くよう子要素に配置） */}
+      <SettingsDrawer />
     </div>
   );
 }

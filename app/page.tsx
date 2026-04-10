@@ -6,7 +6,6 @@ import { useMockStore } from '@/store/useMockStore';
 
 const ScannerView = dynamic(() => import('@/components/ScannerView'), { ssr: false });
 const SuccessView = dynamic(() => import('@/components/SuccessView'), { ssr: false });
-const SettingsDrawer = dynamic(() => import('@/components/SettingsDrawer'), { ssr: false });
 
 export default function Home() {
   const currentView = useMockStore((s) => s.currentView);
@@ -23,7 +22,6 @@ export default function Home() {
             transition={{ duration: 0.15 }}
           >
             <ScannerView />
-            <SettingsDrawer />
           </motion.div>
         ) : (
           <motion.div
