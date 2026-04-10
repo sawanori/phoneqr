@@ -42,13 +42,13 @@ export default function SuccessView() {
 
   return (
     <div className="w-full h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-white gap-6 px-6">
-      {/* 支払い完了テキスト */}
+      {/* 納税完了テキスト */}
       <motion.p
         className="text-xl font-semibold text-gray-700"
         {...fadeInUp}
         transition={{ delay: 0.4, duration: 0.4 }}
       >
-        支払い完了
+        納税完了
       </motion.p>
 
       {/* チェックマークアニメーション */}
@@ -85,7 +85,7 @@ export default function SuccessView() {
         {...fadeInUp}
         transition={{ delay: 0.65, duration: 0.4 }}
       >
-        支払い先: {shopName}
+        納税先: {shopName}
       </motion.p>
 
       {/* 区切り線 */}

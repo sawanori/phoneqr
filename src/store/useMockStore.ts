@@ -20,7 +20,7 @@ export const useMockStore = create<MockState>()(
     (set) => ({
       themeColor: DEFAULT_THEME_COLOR,
       amount: 1500,
-      shopName: 'NonTurn Cafe',
+      shopName: '東京都',
       currentView: 'scanner',
       setThemeColor: (color) =>
         set({ themeColor: HEX_REGEX.test(color) ? color : DEFAULT_THEME_COLOR }),

@@ -29,7 +29,7 @@ const mockSetCurrentView = jest.fn();
 const mockStore = {
   themeColor: '#ff0033',
   amount: 1500,
-  shopName: 'NonTurn Cafe',
+  shopName: '東京都',
   currentView: 'scanner' as const,
   setCurrentView: mockSetCurrentView,
   setThemeColor: jest.fn(),

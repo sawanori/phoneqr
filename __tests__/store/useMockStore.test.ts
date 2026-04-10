@@ -26,7 +26,7 @@ describe('useMockStore - 正常系', () => {
 
     expect(state.themeColor).toBe('#ff0033');
     expect(state.amount).toBe(1500);
-    expect(state.shopName).toBe('NonTurn Cafe');
+    expect(state.shopName).toBe('東京都');
     expect(state.currentView).toBe('scanner');
   });
 
@@ -161,7 +161,7 @@ describe('useMockStore - persist永続化', () => {
     const state = useMockStore.getState();
     expect(state.themeColor).toBe('#ff0033');
     expect(state.amount).toBe(1500);
-    expect(state.shopName).toBe('NonTurn Cafe');
+    expect(state.shopName).toBe('東京都');
     expect(state.currentView).toBe('scanner');
   });
 });

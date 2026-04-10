@@ -23,7 +23,7 @@ const mockSetCurrentView = jest.fn();
 const defaultMockState = {
   themeColor: '#ff0033',
   amount: 1500,
-  shopName: 'NonTurn Cafe',
+  shopName: '東京都',
   currentView: 'success' as const,
   setCurrentView: mockSetCurrentView,
   setThemeColor: jest.fn(),
@@ -47,9 +47,9 @@ describe('SuccessView', () => {
   });
 
   describe('SV-02: 店舗名表示', () => {
-    it('ZustandのshopNameが「支払い先: NonTurn Cafe」形式で表示される', () => {
+    it('ZustandのshopNameが「納税先: NonTurn Cafe」形式で表示される', () => {
       render(<SuccessView />);
-      expect(screen.getByText('支払い先: NonTurn Cafe')).toBeInTheDocument();
+      expect(screen.getByText('納税先: 東京都')).toBeInTheDocument();
     });
   });
 
@@ -99,7 +99,7 @@ describe('SuccessView', () => {
       render(<SuccessView />);
       // shopNameが空でも店舗名表示のp要素が存在し、クラッシュしないことを確認
       // Testing Libraryは末尾スペースをnormalizeするため、正規表現で先頭部分だけ確認
-      expect(screen.getByText(/支払い先/)).toBeInTheDocument();
+      expect(screen.getByText(/納税先/)).toBeInTheDocument();
     });
   });
 });
