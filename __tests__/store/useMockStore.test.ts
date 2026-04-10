@@ -165,3 +165,125 @@ describe('useMockStore - persist永続化', () => {
     expect(state.currentView).toBe('scanner');
   });
 });
+
+// =============================================================================
+// scannerPattern 正常系
+// =============================================================================
+
+describe('useMockStore - scannerPattern 正常系', () => {
+  test('S-15: 初期値 scannerPattern が "standard" である', async () => {
+    const store = await getStore();
+    expect(store.getState().scannerPattern).toBe('standard');
+  });
+
+  test('S-16: setScannerPattern("minimal") で scannerPattern が "minimal" に更新される', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern('minimal');
+    expect(store.getState().scannerPattern).toBe('minimal');
+  });
+
+  test('S-17: setScannerPattern("neon") で scannerPattern が "neon" に更新される', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern('neon');
+    expect(store.getState().scannerPattern).toBe('neon');
+  });
+
+  test('S-18: setScannerPattern("friendly") で scannerPattern が "friendly" に更新される', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern('friendly');
+    expect(store.getState().scannerPattern).toBe('friendly');
+  });
+});
+
+// =============================================================================
+// scannerPattern 異常系（バリデーション）
+// =============================================================================
+
+describe('useMockStore - scannerPattern 異常系（バリデーション）', () => {
+  test('S-19: setScannerPattern("unknown" as any) → scannerPattern が "standard" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern('unknown' as any);
+    expect(store.getState().scannerPattern).toBe('standard');
+  });
+
+  test('S-20: setScannerPattern("" as any) → "standard" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern('' as any);
+    expect(store.getState().scannerPattern).toBe('standard');
+  });
+
+  test('S-21: setScannerPattern(null as any) → "standard" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern(null as any);
+    expect(store.getState().scannerPattern).toBe('standard');
+  });
+
+  test('S-22: setScannerPattern(undefined as any) → "standard" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern(undefined as any);
+    expect(store.getState().scannerPattern).toBe('standard');
+  });
+});
+
+// =============================================================================
+// scannerPattern persist 永続化テスト
+// =============================================================================
+
+describe('useMockStore - scannerPattern persist永続化', () => {
+  test('S-23: scannerPattern が localStorage に保存される（永続化対象）', async () => {
+    const store = await getStore();
+    store.getState().setScannerPattern('neon');
+
+    const raw = localStorage.getItem('phoneqr-store');
+    expect(raw).not.toBeNull();
+
+    const parsed = JSON.parse(raw!);
+    expect(parsed.state.scannerPattern).toBe('neon');
+  });
+
+  test('S-24: localStorage に保存済みの scannerPattern: "neon" がstore初期化時に復元される', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'neon',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.scannerPattern).toBe('neon');
+  });
+
+  test('S-25: localStorage の scannerPattern が無効値の場合、"standard" で初期化される', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'invalid-pattern',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.scannerPattern).toBe('standard');
+  });
+});

@@ -18,11 +18,12 @@ jest.mock('@/hooks/useCamera', () => ({
   useCamera: jest.fn(),
 }));
 
-// Framer Motion のモック
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode }) => <div {...props}>{children}</div>,
-  },
+// scanner-patterns モジュールをモック
+jest.mock('@/components/scanner-patterns', () => ({
+  StandardOverlay: ({ themeColor }: any) => <div data-testid="standard-overlay">{themeColor}</div>,
+  MinimalOverlay: ({ themeColor }: any) => <div data-testid="minimal-overlay">{themeColor}</div>,
+  NeonOverlay: ({ themeColor }: any) => <div data-testid="neon-overlay">{themeColor}</div>,
+  FriendlyOverlay: ({ themeColor }: any) => <div data-testid="friendly-overlay">{themeColor}</div>,
 }));
 
 const mockSetCurrentView = jest.fn();
@@ -35,6 +36,8 @@ const mockStore = {
   setThemeColor: jest.fn(),
   setAmount: jest.fn(),
   setShopName: jest.fn(),
+  scannerPattern: 'standard' as const,
+  setScannerPattern: jest.fn(),
 };
 
 beforeEach(() => {
@@ -97,19 +100,54 @@ describe('ScannerView', () => {
     expect(mockSetCurrentView).toHaveBeenCalledWith('success');
   });
 
-  // V-05: ヘッダーにthemeColorが適用されている
-  it('V-05: ヘッダーにthemeColorが適用されている', () => {
-    const { container } = render(<ScannerView />);
-    // ヘッダー要素にthemeColorのinline styleが適用されているか
-    const header = container.querySelector('[style*="ff0033"]');
-    expect(header).not.toBeNull();
+  // V-07: scannerPattern='standard'のときStandardOverlayが表示される
+  it('V-07: scannerPattern="standard"のときStandardOverlayが表示される', () => {
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector({ ...mockStore, scannerPattern: 'standard' }) : { ...mockStore, scannerPattern: 'standard' }
+    );
+    render(<ScannerView />);
+    expect(screen.getByTestId('standard-overlay')).toBeInTheDocument();
   });
 
-  // V-06: ボトムナビゲーションバーが存在する
-  it('V-06: ボトムナビゲーションバーが存在する', () => {
-    const { container } = render(<ScannerView />);
-    // h-16クラスのボトムナビが存在するか
-    const bottomNav = container.querySelector('.h-16');
-    expect(bottomNav).not.toBeNull();
+  // V-08: scannerPattern='minimal'のときMinimalOverlayが表示される
+  it('V-08: scannerPattern="minimal"のときMinimalOverlayが表示される', () => {
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector({ ...mockStore, scannerPattern: 'minimal' }) : { ...mockStore, scannerPattern: 'minimal' }
+    );
+    render(<ScannerView />);
+    expect(screen.getByTestId('minimal-overlay')).toBeInTheDocument();
+  });
+
+  // V-09: scannerPattern='neon'のときNeonOverlayが表示される
+  it('V-09: scannerPattern="neon"のときNeonOverlayが表示される', () => {
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector({ ...mockStore, scannerPattern: 'neon' }) : { ...mockStore, scannerPattern: 'neon' }
+    );
+    render(<ScannerView />);
+    expect(screen.getByTestId('neon-overlay')).toBeInTheDocument();
+  });
+
+  // V-10: scannerPattern='friendly'のときFriendlyOverlayが表示される
+  it('V-10: scannerPattern="friendly"のときFriendlyOverlayが表示される', () => {
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector({ ...mockStore, scannerPattern: 'friendly' }) : { ...mockStore, scannerPattern: 'friendly' }
+    );
+    render(<ScannerView />);
+    expect(screen.getByTestId('friendly-overlay')).toBeInTheDocument();
+  });
+
+  // V-11: どのパターンでもタップでsetCurrentView('success')が呼ばれる
+  it('V-11: どのパターンでもタップでsetCurrentView("success")が呼ばれる', () => {
+    const patterns = ['standard', 'minimal', 'neon', 'friendly'] as const;
+    patterns.forEach((pattern) => {
+      jest.clearAllMocks();
+      (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+        selector ? selector({ ...mockStore, scannerPattern: pattern }) : { ...mockStore, scannerPattern: pattern }
+      );
+      const { container } = render(<ScannerView />);
+      const wrapper = container.firstChild as HTMLElement;
+      fireEvent.click(wrapper);
+      expect(mockSetCurrentView).toHaveBeenCalledWith('success');
+    });
   });
 });

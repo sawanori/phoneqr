@@ -20,6 +20,7 @@ jest.mock('framer-motion', () => ({
 const mockSetThemeColor = jest.fn();
 const mockSetAmount = jest.fn();
 const mockSetShopName = jest.fn();
+const mockSetScannerPattern = jest.fn();
 
 const defaultMockState = {
   themeColor: '#ff0033',
@@ -30,6 +31,8 @@ const defaultMockState = {
   setThemeColor: mockSetThemeColor,
   setAmount: mockSetAmount,
   setShopName: mockSetShopName,
+  scannerPattern: 'standard' as const,
+  setScannerPattern: mockSetScannerPattern,
 };
 
 beforeEach(() => {
@@ -253,5 +256,80 @@ describe('SettingsDrawer', () => {
       const preset = screen.getByTestId(`preset-color-${hex}`);
       expect(preset.className).not.toMatch(/ring-2/);
     }
+  });
+
+  // ---- スキャンUIパターン選択 ----
+
+  it('D-14: ドロワー内に「スキャンUIパターン」セクションが存在する', () => {
+    render(<SettingsDrawer />);
+    const trigger = getTriggerArea();
+
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+
+    expect(screen.getByText('スキャンUIパターン')).toBeInTheDocument();
+  });
+
+  it('D-15: パターン選択ボタンが4つ存在する（standard/minimal/neon/friendly）', () => {
+    render(<SettingsDrawer />);
+    const trigger = getTriggerArea();
+
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+
+    expect(screen.getByTestId('pattern-standard')).toBeInTheDocument();
+    expect(screen.getByTestId('pattern-minimal')).toBeInTheDocument();
+    expect(screen.getByTestId('pattern-neon')).toBeInTheDocument();
+    expect(screen.getByTestId('pattern-friendly')).toBeInTheDocument();
+  });
+
+  it('D-16: scannerPatternが"standard"のとき、pattern-standardボタンがthemeColorのborderColorを持つ', () => {
+    render(<SettingsDrawer />);
+    const trigger = getTriggerArea();
+
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+
+    const standardBtn = screen.getByTestId('pattern-standard');
+    expect(standardBtn).toHaveStyle({ borderColor: '#ff0033' });
+  });
+
+  it('D-17: pattern-minimalボタンクリックでsetScannerPattern("minimal")が呼ばれる', () => {
+    render(<SettingsDrawer />);
+    const trigger = getTriggerArea();
+
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+
+    fireEvent.click(screen.getByTestId('pattern-minimal'));
+    expect(mockSetScannerPattern).toHaveBeenCalledWith('minimal');
+  });
+
+  it('D-18: pattern-neonボタンクリックでsetScannerPattern("neon")が呼ばれる', () => {
+    render(<SettingsDrawer />);
+    const trigger = getTriggerArea();
+
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+
+    fireEvent.click(screen.getByTestId('pattern-neon'));
+    expect(mockSetScannerPattern).toHaveBeenCalledWith('neon');
+  });
+
+  it('D-19: pattern-friendlyボタンクリックでsetScannerPattern("friendly")が呼ばれる', () => {
+    render(<SettingsDrawer />);
+    const trigger = getTriggerArea();
+
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+    fireEvent.click(trigger);
+
+    fireEvent.click(screen.getByTestId('pattern-friendly'));
+    expect(mockSetScannerPattern).toHaveBeenCalledWith('friendly');
   });
 });
