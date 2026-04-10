@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+html, body {
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-noto-sans-jp), 'Hiragino Sans', sans-serif;
+}
+
+.font-amount {
+  font-family: var(--font-dm-sans), var(--font-noto-sans-jp), sans-serif;
+}
+
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
