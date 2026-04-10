@@ -10,7 +10,7 @@ export default function MinimalOverlay({ themeColor }: OverlayProps) {
   return (
     <div
       style={{
-        position: 'fixed',
+        position: 'absolute',
         inset: 0,
         pointerEvents: 'none',
         zIndex: 10,
