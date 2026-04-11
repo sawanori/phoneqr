@@ -20,11 +20,12 @@ export default function MinimalOverlay({ themeColor, onOpenSettings }: OverlayPr
         flexDirection: 'column',
       }}
     >
-      {/* 極薄ヘッダーバー（themeColor背景の帯ではない） */}
+      {/* 極薄ヘッダーバー */}
       <div
         style={{
-          height: '44px',
-          backgroundColor: 'rgba(255,255,255,0.08)',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          minHeight: '44px',
+          backgroundColor: 'rgba(0,0,0,0.6)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -104,7 +105,7 @@ export default function MinimalOverlay({ themeColor, onOpenSettings }: OverlayPr
         </p>
       </div>
 
-      {/* 小さな設定アイコン（画面下部） */}
+      {/* 設定アイコン（画面下部） */}
       <div
         data-testid="history-button"
         style={{
@@ -113,6 +114,7 @@ export default function MinimalOverlay({ themeColor, onOpenSettings }: OverlayPr
           alignItems: 'center',
           paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
           paddingTop: '8px',
+          backgroundColor: 'rgba(0,0,0,0.6)',
           pointerEvents: 'auto',
           cursor: 'pointer',
         }}
