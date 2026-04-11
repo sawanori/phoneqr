@@ -5,6 +5,7 @@ import { Home, QrCode, Clock } from 'lucide-react';
 
 interface OverlayProps {
   themeColor: string;
+  onOpenSettings: () => void;
 }
 
 // themeColorからRGB値を抽出するヘルパー
@@ -23,7 +24,7 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
   return { r, g, b };
 }
 
-export default function NeonOverlay({ themeColor }: OverlayProps) {
+export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps) {
   const { r, g, b } = hexToRgb(themeColor);
 
   return (
@@ -253,7 +254,18 @@ export default function NeonOverlay({ themeColor }: OverlayProps) {
             />
             <span style={{ fontSize: '10px', fontWeight: 'bold', color: themeColor }}>スキャン</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+          <div
+            data-testid="history-button"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '2px',
+              pointerEvents: 'auto',
+              cursor: 'pointer',
+            }}
+            onClick={(e) => { e.stopPropagation(); onOpenSettings(); }}
+          >
             <Clock className="w-5 h-5" style={{ color: '#555' }} />
             <span style={{ fontSize: '10px', color: '#555' }}>履歴</span>
           </div>

@@ -5,9 +5,10 @@ import { Home, QrCode, Clock, Menu, X } from 'lucide-react';
 
 interface OverlayProps {
   themeColor: string;
+  onOpenSettings: () => void;
 }
 
-export default function StandardOverlay({ themeColor }: OverlayProps) {
+export default function StandardOverlay({ themeColor, onOpenSettings }: OverlayProps) {
   return (
     <div
       style={{
@@ -189,12 +190,16 @@ export default function StandardOverlay({ themeColor }: OverlayProps) {
             <span style={{ fontSize: '10px', fontWeight: 'bold', color: themeColor }}>スキャン</span>
           </div>
           <div
+            data-testid="history-button"
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               gap: '2px',
+              pointerEvents: 'auto',
+              cursor: 'pointer',
             }}
+            onClick={(e) => { e.stopPropagation(); onOpenSettings(); }}
           >
             <Clock className="w-5 h-5 text-gray-400" />
             <span style={{ fontSize: '10px', color: '#9ca3af' }}>履歴</span>

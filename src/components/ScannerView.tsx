@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { useMockStore, type ScannerPattern } from '@/store/useMockStore';
 import { useCamera } from '@/hooks/useCamera';
 import { playSound } from '@/utils/playSound';
@@ -13,6 +14,7 @@ import type { ComponentType } from 'react';
 
 interface OverlayProps {
   themeColor: string;
+  onOpenSettings: () => void;
 }
 
 const PATTERN_MAP: Record<ScannerPattern, ComponentType<OverlayProps>> = {
@@ -27,6 +29,8 @@ export default function ScannerView() {
   const setCurrentView = useMockStore((s) => s.setCurrentView);
   const scannerPattern = useMockStore((s) => s.scannerPattern);
   const { videoRef, error } = useCamera();
+
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleCheatTap = () => {
     playSound();
@@ -54,10 +58,16 @@ export default function ScannerView() {
       )}
 
       {/* パターン別オーバーレイ */}
-      <OverlayComponent themeColor={themeColor} />
+      <OverlayComponent
+        themeColor={themeColor}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+      />
 
       {/* 設定ドロワー（チートタップのstopPropagationが効くよう子要素に配置） */}
-      <SettingsDrawer />
+      <SettingsDrawer
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 }

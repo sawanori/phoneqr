@@ -6,29 +6,16 @@ test.describe('設定ドロワー', () => {
     await page.waitForTimeout(1000);
   });
 
-  test('右下を3回タップするとドロワーが開く', async ({ page }) => {
-    // 右下の隠しトリガー領域を3回クリック
-    const trigger = page.getByTestId('settings-trigger');
-    await trigger.click();
-    await trigger.click();
-    await trigger.click();
+  test('履歴ボタンをタップするとドロワーが開く', async ({ page }) => {
+    // 履歴ボタンをクリック
+    await page.getByText('履歴').click();
     // ドロワーの「撮影プロップ設定」が表示される
     await expect(page.getByText('撮影プロップ設定')).toBeVisible({ timeout: 2000 });
   });
 
-  test('1回タップではドロワーが開かない', async ({ page }) => {
-    const trigger = page.getByTestId('settings-trigger');
-    await trigger.click();
-    await page.waitForTimeout(500);
-    await expect(page.getByText('撮影プロップ設定')).not.toBeVisible();
-  });
-
   test('ドロワーで金額を変更すると決済完了画面に反映される', async ({ page }) => {
-    // ドロワーを開く
-    const trigger = page.getByTestId('settings-trigger');
-    await trigger.click();
-    await trigger.click();
-    await trigger.click();
+    // 履歴ボタンをクリックしてドロワーを開く
+    await page.getByText('履歴').click();
     await expect(page.getByText('撮影プロップ設定')).toBeVisible({ timeout: 2000 });
 
     // 金額を変更
@@ -48,11 +35,8 @@ test.describe('設定ドロワー', () => {
   });
 
   test('プリセットカラーボタンでテーマカラーが変更される', async ({ page }) => {
-    // ドロワーを開く
-    const trigger = page.getByTestId('settings-trigger');
-    await trigger.click();
-    await trigger.click();
-    await trigger.click();
+    // 履歴ボタンをクリックしてドロワーを開く
+    await page.getByText('履歴').click();
     await expect(page.getByText('撮影プロップ設定')).toBeVisible({ timeout: 2000 });
 
     // 青のプリセットをクリック
@@ -65,11 +49,8 @@ test.describe('設定ドロワー', () => {
   });
 
   test('店舗名を変更すると決済完了画面に反映される', async ({ page }) => {
-    // ドロワーを開く
-    const trigger = page.getByTestId('settings-trigger');
-    await trigger.click();
-    await trigger.click();
-    await trigger.click();
+    // 履歴ボタンをクリックしてドロワーを開く
+    await page.getByText('履歴').click();
     await expect(page.getByText('撮影プロップ設定')).toBeVisible({ timeout: 2000 });
 
     // 店舗名を変更

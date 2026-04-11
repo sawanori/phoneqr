@@ -20,10 +20,25 @@ jest.mock('@/hooks/useCamera', () => ({
 
 // scanner-patterns モジュールをモック
 jest.mock('@/components/scanner-patterns', () => ({
-  StandardOverlay: ({ themeColor }: any) => <div data-testid="standard-overlay">{themeColor}</div>,
-  MinimalOverlay: ({ themeColor }: any) => <div data-testid="minimal-overlay">{themeColor}</div>,
-  NeonOverlay: ({ themeColor }: any) => <div data-testid="neon-overlay">{themeColor}</div>,
-  FriendlyOverlay: ({ themeColor }: any) => <div data-testid="friendly-overlay">{themeColor}</div>,
+  StandardOverlay: ({ themeColor, onOpenSettings }: any) => (
+    <div data-testid="standard-overlay" onClick={onOpenSettings}>{themeColor}</div>
+  ),
+  MinimalOverlay: ({ themeColor, onOpenSettings }: any) => (
+    <div data-testid="minimal-overlay" onClick={onOpenSettings}>{themeColor}</div>
+  ),
+  NeonOverlay: ({ themeColor, onOpenSettings }: any) => (
+    <div data-testid="neon-overlay" onClick={onOpenSettings}>{themeColor}</div>
+  ),
+  FriendlyOverlay: ({ themeColor, onOpenSettings }: any) => (
+    <div data-testid="friendly-overlay" onClick={onOpenSettings}>{themeColor}</div>
+  ),
+}));
+
+// SettingsDrawer のモック
+jest.mock('@/components/SettingsDrawer', () => ({
+  __esModule: true,
+  default: ({ isOpen, onClose }: any) =>
+    isOpen ? <div data-testid="settings-drawer"><button onClick={onClose}>閉じる</button></div> : null,
 }));
 
 const mockSetCurrentView = jest.fn();
@@ -149,5 +164,19 @@ describe('ScannerView', () => {
       fireEvent.click(wrapper);
       expect(mockSetCurrentView).toHaveBeenCalledWith('success');
     });
+  });
+
+  // V-12: onOpenSettings呼び出しでSettingsDrawerが開く
+  it('V-12: オーバーレイのonOpenSettings呼び出しでSettingsDrawerが開く', () => {
+    render(<ScannerView />);
+    // 初期状態ではドロワーは非表示
+    expect(screen.queryByTestId('settings-drawer')).not.toBeInTheDocument();
+
+    // オーバーレイのonOpenSettingsをシミュレート（モックがdivのonClickとして登録）
+    const overlay = screen.getByTestId('standard-overlay');
+    fireEvent.click(overlay);
+
+    // SettingsDrawerが表示される
+    expect(screen.getByTestId('settings-drawer')).toBeInTheDocument();
   });
 });

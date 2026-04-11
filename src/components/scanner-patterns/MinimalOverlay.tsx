@@ -1,12 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Settings } from 'lucide-react';
 
 interface OverlayProps {
   themeColor: string;
+  onOpenSettings: () => void;
 }
 
-export default function MinimalOverlay({ themeColor }: OverlayProps) {
+export default function MinimalOverlay({ themeColor, onOpenSettings }: OverlayProps) {
   return (
     <div
       style={{
@@ -100,6 +102,26 @@ export default function MinimalOverlay({ themeColor }: OverlayProps) {
         >
           QRコードを枠内に収めてください
         </p>
+      </div>
+
+      {/* 小さな設定アイコン（画面下部） */}
+      <div
+        data-testid="history-button"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+          paddingTop: '8px',
+          pointerEvents: 'auto',
+          cursor: 'pointer',
+        }}
+        onClick={(e) => { e.stopPropagation(); onOpenSettings(); }}
+      >
+        <Settings
+          size={12}
+          style={{ color: 'white', opacity: 0.3 }}
+        />
       </div>
 
     </div>

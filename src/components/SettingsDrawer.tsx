@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMockStore } from '@/store/useMockStore';
 import type { ScannerPattern } from '@/store/useMockStore';
@@ -58,11 +58,12 @@ const PRESET_COLORS = [
   { name: 'オレンジ', hex: '#ff6600' },
 ] as const;
 
-export default function SettingsDrawer() {
-  const [isOpen, setIsOpen] = useState(false);
-  const tapCount = useRef(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+interface SettingsDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
+export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps) {
   const themeColor = useMockStore((s) => s.themeColor);
   const amount = useMockStore((s) => s.amount);
   const shopName = useMockStore((s) => s.shopName);
@@ -78,43 +79,8 @@ export default function SettingsDrawer() {
     setHexInput(themeColor);
   }, [themeColor]);
 
-  function handleTriggerTap(e: React.MouseEvent) {
-    e.stopPropagation();
-    tapCount.current += 1;
-    if (tapCount.current >= 3) {
-      tapCount.current = 0;
-      if (timerRef.current) clearTimeout(timerRef.current);
-      setIsOpen(true);
-      return;
-    }
-    if (timerRef.current) clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => {
-      tapCount.current = 0;
-    }, 1000);
-  }
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
   return (
     <>
-      {/* 隠しトリガー領域（画面右下） */}
-      <button
-        data-testid="settings-trigger"
-        className="fixed bottom-20 right-4 w-16 h-16 bg-transparent border-none cursor-pointer"
-        style={{ zIndex: 60 }}
-        onClick={handleTriggerTap}
-        onTouchEnd={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          handleTriggerTap(e as unknown as React.MouseEvent);
-        }}
-        aria-label="設定を開く"
-      />
-
       {/* ドロワー本体 */}
       <AnimatePresence>
         {isOpen && (
@@ -128,7 +94,7 @@ export default function SettingsDrawer() {
               className="absolute inset-0 bg-black/60 z-40"
               onClick={(e) => {
                 e.stopPropagation();
-                setIsOpen(false);
+                onClose();
               }}
             />
 
@@ -149,7 +115,7 @@ export default function SettingsDrawer() {
                   撮影プロップ設定
                 </h3>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={onClose}
                   className="text-blue-500 font-bold"
                 >
                   閉じる

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { useMockStore } from '@/store/useMockStore';
 import SettingsDrawer from '@/components/SettingsDrawer';
 
@@ -37,64 +37,21 @@ const defaultMockState = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  jest.useFakeTimers();
   (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
     selector ? selector(defaultMockState) : defaultMockState
   );
 });
 
-afterEach(() => {
-  jest.useRealTimers();
-});
-
-// トリガー領域を取得するヘルパー
-function getTriggerArea() {
-  // data-testid="settings-trigger" を使う
-  return screen.getByTestId('settings-trigger');
+// ドロワーを開いた状態でレンダリングするヘルパー
+function renderOpen(onClose = jest.fn()) {
+  return render(<SettingsDrawer isOpen={true} onClose={onClose} />);
 }
 
 describe('SettingsDrawer', () => {
   // ---- 正常系 ----
 
-  it('D-01: 3回タップでドロワーが表示される', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    // ドロワーはまだ表示されていない
-    expect(screen.queryByText('撮影プロップ設定')).not.toBeInTheDocument();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-
-    expect(screen.getByText('撮影プロップ設定')).toBeInTheDocument();
-  });
-
-  it('D-02: 2回タップ後1秒経過でカウントリセット、その後1回タップしてもドロワーが開かない', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-
-    // 1秒経過
-    act(() => {
-      jest.advanceTimersByTime(1000);
-    });
-
-    // 1回タップ → 合計1回なのでドロワーは開かない
-    fireEvent.click(trigger);
-    expect(screen.queryByText('撮影プロップ設定')).not.toBeInTheDocument();
-  });
-
   it('D-03: themeColorテキスト入力でblur時にsetThemeColorが呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    // ドロワーを開く
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const hexInput = screen.getByTestId('theme-color-text-input');
     // onChange時はStoreを更新しない（ローカルstateのみ更新）
@@ -107,12 +64,7 @@ describe('SettingsDrawer', () => {
   });
 
   it('D-04: amount入力変更でsetAmountが呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const amountInput = screen.getByTestId('amount-input');
     fireEvent.change(amountInput, { target: { value: '3000' } });
@@ -121,12 +73,7 @@ describe('SettingsDrawer', () => {
   });
 
   it('D-05: shopName入力変更でsetShopNameが呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const shopNameInput = screen.getByTestId('shop-name-input');
     fireEvent.change(shopNameInput, { target: { value: 'Test Shop' } });
@@ -134,14 +81,9 @@ describe('SettingsDrawer', () => {
     expect(mockSetShopName).toHaveBeenCalledWith('Test Shop');
   });
 
-  it('D-06: オーバーレイクリックでドロワーが閉じる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    // ドロワーを開く
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+  it('D-06: オーバーレイクリックでonCloseが呼ばれる', () => {
+    const mockOnClose = jest.fn();
+    renderOpen(mockOnClose);
 
     expect(screen.getByText('撮影プロップ設定')).toBeInTheDocument();
 
@@ -149,37 +91,16 @@ describe('SettingsDrawer', () => {
     const overlay = screen.getByTestId('drawer-overlay');
     fireEvent.click(overlay);
 
-    expect(screen.queryByText('撮影プロップ設定')).not.toBeInTheDocument();
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
-  // ---- タイマーリーク/連続タップ（C-3対応） ----
+  it('D-06b: 閉じるボタンクリックでonCloseが呼ばれる', () => {
+    const mockOnClose = jest.fn();
+    renderOpen(mockOnClose);
 
-  it('D-07: 1回タップ→0.5秒後に2回目→さらに0.5秒後に3回目→ドロワーが開く（1秒以内の3タップ成功）', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
+    fireEvent.click(screen.getByText('閉じる'));
 
-    fireEvent.click(trigger);
-    act(() => { jest.advanceTimersByTime(500); });
-    fireEvent.click(trigger);
-    act(() => { jest.advanceTimersByTime(500); });
-    fireEvent.click(trigger);
-
-    expect(screen.getByText('撮影プロップ設定')).toBeInTheDocument();
-  });
-
-  it('D-08: トリガータップがe.stopPropagation()で親に伝播しないこと', () => {
-    const parentClickHandler = jest.fn();
-
-    render(
-      <div onClick={parentClickHandler}>
-        <SettingsDrawer />
-      </div>
-    );
-
-    const trigger = getTriggerArea();
-    fireEvent.click(trigger);
-
-    expect(parentClickHandler).not.toHaveBeenCalled();
+    expect(mockOnClose).toHaveBeenCalled();
   });
 
   it('D-09: ドロワー内クリックが親に伝播しないこと', () => {
@@ -187,14 +108,9 @@ describe('SettingsDrawer', () => {
 
     render(
       <div onClick={parentClickHandler}>
-        <SettingsDrawer />
+        <SettingsDrawer isOpen={true} onClose={jest.fn()} />
       </div>
     );
-
-    const trigger = getTriggerArea();
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
 
     // ドロワーが開いた状態でドロワー内をクリック
     parentClickHandler.mockClear();
@@ -204,15 +120,20 @@ describe('SettingsDrawer', () => {
     expect(parentClickHandler).not.toHaveBeenCalled();
   });
 
+  it('D-closed: isOpen=falseのときドロワーが表示されない', () => {
+    render(<SettingsDrawer isOpen={false} onClose={jest.fn()} />);
+    expect(screen.queryByText('撮影プロップ設定')).not.toBeInTheDocument();
+  });
+
+  it('D-open: isOpen=trueのときドロワーが表示される', () => {
+    renderOpen();
+    expect(screen.getByText('撮影プロップ設定')).toBeInTheDocument();
+  });
+
   // ---- カラー同期テスト（I-7対応） ----
 
   it('D-10: プリセットカラーボタン（青）をクリックするとsetThemeColor("#0066ff")が呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const bluePreset = screen.getByTestId('preset-color-#0066ff');
     fireEvent.click(bluePreset);
@@ -222,12 +143,7 @@ describe('SettingsDrawer', () => {
 
   it('D-11: 現在のthemeColorと一致するプリセットがハイライトされている', () => {
     // themeColorが '#ff0033'（赤）の場合
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const redPreset = screen.getByTestId('preset-color-#ff0033');
     // ハイライトクラス（ring-2）が付いていること
@@ -244,12 +160,7 @@ describe('SettingsDrawer', () => {
       selector ? selector(customState) : customState
     );
 
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const presetColors = ['#ff0033', '#0066ff', '#00cc66', '#6633cc', '#ff6600'];
     for (const hex of presetColors) {
@@ -261,23 +172,12 @@ describe('SettingsDrawer', () => {
   // ---- スキャンUIパターン選択 ----
 
   it('D-14: ドロワー内に「スキャンUIパターン」セクションが存在する', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-
+    renderOpen();
     expect(screen.getByText('スキャンUIパターン')).toBeInTheDocument();
   });
 
   it('D-15: パターン選択ボタンが4つ存在する（standard/minimal/neon/friendly）', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     expect(screen.getByTestId('pattern-standard')).toBeInTheDocument();
     expect(screen.getByTestId('pattern-minimal')).toBeInTheDocument();
@@ -286,48 +186,28 @@ describe('SettingsDrawer', () => {
   });
 
   it('D-16: scannerPatternが"standard"のとき、pattern-standardボタンがthemeColorのborderColorを持つ', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     const standardBtn = screen.getByTestId('pattern-standard');
     expect(standardBtn).toHaveStyle({ borderColor: '#ff0033' });
   });
 
   it('D-17: pattern-minimalボタンクリックでsetScannerPattern("minimal")が呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     fireEvent.click(screen.getByTestId('pattern-minimal'));
     expect(mockSetScannerPattern).toHaveBeenCalledWith('minimal');
   });
 
   it('D-18: pattern-neonボタンクリックでsetScannerPattern("neon")が呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     fireEvent.click(screen.getByTestId('pattern-neon'));
     expect(mockSetScannerPattern).toHaveBeenCalledWith('neon');
   });
 
   it('D-19: pattern-friendlyボタンクリックでsetScannerPattern("friendly")が呼ばれる', () => {
-    render(<SettingsDrawer />);
-    const trigger = getTriggerArea();
-
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
-    fireEvent.click(trigger);
+    renderOpen();
 
     fireEvent.click(screen.getByTestId('pattern-friendly'));
     expect(mockSetScannerPattern).toHaveBeenCalledWith('friendly');

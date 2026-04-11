@@ -5,6 +5,7 @@ import { Home, QrCode, Clock } from 'lucide-react';
 
 interface OverlayProps {
   themeColor: string;
+  onOpenSettings: () => void;
 }
 
 // lighterColorを生成（透明度で近似）
@@ -12,7 +13,7 @@ function getLighterColor(themeColor: string): string {
   return themeColor + '99';
 }
 
-export default function FriendlyOverlay({ themeColor }: OverlayProps) {
+export default function FriendlyOverlay({ themeColor, onOpenSettings }: OverlayProps) {
   const lighterColor = getLighterColor(themeColor);
 
   return (
@@ -207,7 +208,18 @@ export default function FriendlyOverlay({ themeColor }: OverlayProps) {
             </div>
             <span style={{ fontSize: '10px', fontWeight: 'bold', color: themeColor }}>スキャン</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+          <div
+            data-testid="history-button"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '2px',
+              pointerEvents: 'auto',
+              cursor: 'pointer',
+            }}
+            onClick={(e) => { e.stopPropagation(); onOpenSettings(); }}
+          >
             <div
               style={{
                 width: 36,
