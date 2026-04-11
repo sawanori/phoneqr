@@ -169,10 +169,10 @@ export default function FriendlyOverlay({ themeColor, onOpenSettings }: OverlayP
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-end',
             justifyContent: 'space-around',
             height: '64px',
-            paddingTop: '6px',
+            paddingBottom: '8px',
             paddingLeft: '32px',
             paddingRight: '32px',
           }}
