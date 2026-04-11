@@ -236,6 +236,7 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
             alignItems: 'center',
             justifyContent: 'space-around',
             height: '64px',
+            paddingTop: '6px',
             paddingLeft: '32px',
             paddingRight: '32px',
           }}

@@ -172,6 +172,7 @@ export default function FriendlyOverlay({ themeColor, onOpenSettings }: OverlayP
             alignItems: 'center',
             justifyContent: 'space-around',
             height: '64px',
+            paddingTop: '6px',
             paddingLeft: '32px',
             paddingRight: '32px',
           }}
