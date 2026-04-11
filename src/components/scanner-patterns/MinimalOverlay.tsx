@@ -18,9 +18,6 @@ export default function MinimalOverlay({ themeColor }: OverlayProps) {
         flexDirection: 'column',
       }}
     >
-      {/* 上部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
-
       {/* 極薄ヘッダーバー（themeColor背景の帯ではない） */}
       <div
         style={{
@@ -105,8 +102,6 @@ export default function MinimalOverlay({ themeColor }: OverlayProps) {
         </p>
       </div>
 
-      {/* 下部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
     </div>
   );
 }

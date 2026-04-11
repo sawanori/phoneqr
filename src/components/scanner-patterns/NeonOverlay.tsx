@@ -38,15 +38,13 @@ export default function NeonOverlay({ themeColor }: OverlayProps) {
         background: 'transparent',
       }}
     >
-      {/* 上部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
-
       {/* ヘッダー帯 */}
       <div
         data-testid="header"
         style={{
           backgroundColor: '#0a0a0a',
-          height: '56px',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          minHeight: '56px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -77,7 +75,7 @@ export default function NeonOverlay({ themeColor }: OverlayProps) {
       <div
         style={{
           position: 'absolute',
-          top: '76px',
+          top: 'calc(env(safe-area-inset-top, 0px) + 56px)',
           left: '16px',
           color: themeColor,
           fontFamily: "'Courier New', monospace",
@@ -261,9 +259,6 @@ export default function NeonOverlay({ themeColor }: OverlayProps) {
           </div>
         </div>
       </div>
-
-      {/* 下部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
 
       {/* CSS keyframesのためのstyleタグ */}
       <style>{`

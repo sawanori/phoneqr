@@ -26,15 +26,13 @@ export default function FriendlyOverlay({ themeColor }: OverlayProps) {
         flexDirection: 'column',
       }}
     >
-      {/* 上部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
-
       {/* ヘッダー帯 */}
       <div
         data-testid="header"
         style={{
           background: `linear-gradient(to right, ${themeColor}, ${lighterColor})`,
-          height: '60px',
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          minHeight: '60px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -227,8 +225,6 @@ export default function FriendlyOverlay({ themeColor }: OverlayProps) {
         </div>
       </div>
 
-      {/* 下部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
     </div>
   );
 }

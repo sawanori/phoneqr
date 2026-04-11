@@ -19,9 +19,6 @@ export default function StandardOverlay({ themeColor }: OverlayProps) {
         flexDirection: 'column',
       }}
     >
-      {/* 上部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
-
       {/* ヘッダー帯 */}
       <div
         data-testid="header"
@@ -205,8 +202,6 @@ export default function StandardOverlay({ themeColor }: OverlayProps) {
         </div>
       </div>
 
-      {/* 下部ガード領域 */}
-      <div style={{ height: 20, touchAction: 'none' }} />
     </div>
   );
 }
