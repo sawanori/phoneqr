@@ -43,7 +43,7 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
       <div
         data-testid="header"
         style={{
-          backgroundColor: '#0a0a0a',
+          backgroundColor: 'rgba(10,10,10,0.7)',
           paddingTop: 'env(safe-area-inset-top, 0px)',
           minHeight: '56px',
           display: 'flex',
@@ -224,7 +224,7 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
       {/* ボトムナビゲーションバー */}
       <div
         style={{
-          backgroundColor: '#0a0a0a',
+          backgroundColor: 'rgba(10,10,10,0.7)',
           borderTop: `1px solid ${themeColor}33`,
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           pointerEvents: 'auto',
