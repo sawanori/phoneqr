@@ -43,7 +43,7 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
       <div
         data-testid="header"
         style={{
-          backgroundColor: 'transparent',
+          backgroundColor: themeColor,
           paddingTop: 'env(safe-area-inset-top, 0px)',
           minHeight: '56px',
           display: 'flex',
@@ -54,12 +54,12 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
           pointerEvents: 'auto',
         }}
       >
-        <span style={{ color: themeColor, fontFamily: "'Courier New', monospace", fontSize: '12px' }}>
+        <span style={{ color: 'white', fontFamily: "'Courier New', monospace", fontSize: '12px' }}>
           [
         </span>
         <span
           style={{
-            color: themeColor,
+            color: 'white',
             fontFamily: "'Courier New', monospace",
             fontWeight: 'bold',
             fontSize: '14px',
@@ -67,7 +67,7 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
         >
           SCAN_QR.EXE
         </span>
-        <span style={{ color: themeColor, fontFamily: "'Courier New', monospace", fontSize: '12px' }}>
+        <span style={{ color: 'white', fontFamily: "'Courier New', monospace", fontSize: '12px' }}>
           ]
         </span>
       </div>
@@ -224,7 +224,7 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
       {/* ボトムナビゲーションバー */}
       <div
         style={{
-          backgroundColor: 'transparent',
+          backgroundColor: themeColor,
           borderTop: `1px solid ${themeColor}33`,
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           pointerEvents: 'auto',
@@ -241,18 +241,12 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-            <Home className="w-5 h-5" style={{ color: '#555' }} />
-            <span style={{ fontSize: '10px', color: '#555' }}>ホーム</span>
+            <Home className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.6)' }}>ホーム</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
-            <QrCode
-              className="w-6 h-6"
-              style={{
-                color: themeColor,
-                filter: `drop-shadow(0 0 4px ${themeColor})`,
-              }}
-            />
-            <span style={{ fontSize: '10px', fontWeight: 'bold', color: themeColor }}>スキャン</span>
+            <QrCode className="w-6 h-6" style={{ color: 'white' }} />
+            <span style={{ fontSize: '10px', fontWeight: 'bold', color: 'white' }}>スキャン</span>
           </div>
           <div
             data-testid="history-button"
@@ -266,8 +260,8 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
             }}
             onClick={(e) => { e.stopPropagation(); onOpenSettings(); }}
           >
-            <Clock className="w-5 h-5" style={{ color: '#555' }} />
-            <span style={{ fontSize: '10px', color: '#555' }}>履歴</span>
+            <Clock className="w-5 h-5" style={{ color: 'rgba(255,255,255,0.6)' }} />
+            <span style={{ fontSize: '10px', color: 'rgba(255,255,255,0.6)' }}>履歴</span>
           </div>
         </div>
       </div>
