@@ -104,8 +104,14 @@ export default function SettingsDrawer() {
       {/* 隠しトリガー領域（画面右下） */}
       <button
         data-testid="settings-trigger"
-        className="absolute bottom-20 right-4 w-16 h-16 z-50 bg-transparent border-none cursor-pointer"
+        className="fixed bottom-20 right-4 w-16 h-16 bg-transparent border-none cursor-pointer"
+        style={{ zIndex: 60 }}
         onClick={handleTriggerTap}
+        onTouchEnd={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          handleTriggerTap(e as unknown as React.MouseEvent);
+        }}
         aria-label="設定を開く"
       />
 
