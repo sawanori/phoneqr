@@ -21,6 +21,7 @@ const mockSetThemeColor = jest.fn();
 const mockSetAmount = jest.fn();
 const mockSetShopName = jest.fn();
 const mockSetScannerPattern = jest.fn();
+const mockSetSuccessPattern = jest.fn();
 
 const defaultMockState = {
   themeColor: '#ff0033',
@@ -33,6 +34,8 @@ const defaultMockState = {
   setShopName: mockSetShopName,
   scannerPattern: 'standard' as const,
   setScannerPattern: mockSetScannerPattern,
+  successPattern: 'tax' as const,
+  setSuccessPattern: mockSetSuccessPattern,
 };
 
 beforeEach(() => {
@@ -211,5 +214,40 @@ describe('SettingsDrawer', () => {
 
     fireEvent.click(screen.getByTestId('pattern-friendly'));
     expect(mockSetScannerPattern).toHaveBeenCalledWith('friendly');
+  });
+
+  // ---- 決済完了パターン選択 ----
+
+  it('D-SP-1: ドロワー内に「決済完了パターン」セクションが存在する', () => {
+    renderOpen();
+    expect(screen.getByText('決済完了パターン')).toBeInTheDocument();
+  });
+
+  it('D-SP-2: 成功パターン選択ボタンが2つ存在する（success-pattern-tax, success-pattern-autoDebit）', () => {
+    renderOpen();
+
+    expect(screen.getByTestId('success-pattern-tax')).toBeInTheDocument();
+    expect(screen.getByTestId('success-pattern-autoDebit')).toBeInTheDocument();
+  });
+
+  it('D-SP-3: successPatternが"tax"のとき、success-pattern-taxボタンがthemeColorのborderColorを持つ', () => {
+    renderOpen();
+
+    const taxBtn = screen.getByTestId('success-pattern-tax');
+    expect(taxBtn).toHaveStyle({ borderColor: '#ff0033' });
+  });
+
+  it('D-SP-4: success-pattern-autoDebitボタンクリックでsetSuccessPattern("autoDebit")が呼ばれる', () => {
+    renderOpen();
+
+    fireEvent.click(screen.getByTestId('success-pattern-autoDebit'));
+    expect(mockSetSuccessPattern).toHaveBeenCalledWith('autoDebit');
+  });
+
+  it('D-SP-5: success-pattern-taxボタンクリックでsetSuccessPattern("tax")が呼ばれる', () => {
+    renderOpen();
+
+    fireEvent.click(screen.getByTestId('success-pattern-tax'));
+    expect(mockSetSuccessPattern).toHaveBeenCalledWith('tax');
   });
 });

@@ -287,3 +287,178 @@ describe('useMockStore - scannerPattern persist永続化', () => {
     expect(state.scannerPattern).toBe('standard');
   });
 });
+
+// =============================================================================
+// successPattern 正常系
+// =============================================================================
+
+describe('useMockStore - successPattern 正常系', () => {
+  test('S-26: successPatternの初期値が"tax"である', async () => {
+    const store = await getStore();
+    expect(store.getState().successPattern).toBe('tax');
+  });
+
+  test('S-27: setSuccessPattern("autoDebit") で successPattern が "autoDebit" に更新される', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern('autoDebit');
+    expect(store.getState().successPattern).toBe('autoDebit');
+  });
+
+  test('S-28: setSuccessPattern("tax") で successPattern が "tax" に更新される', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern('autoDebit');
+    store.getState().setSuccessPattern('tax');
+    expect(store.getState().successPattern).toBe('tax');
+  });
+});
+
+// =============================================================================
+// successPattern 異常系（バリデーション）
+// =============================================================================
+
+describe('useMockStore - successPattern 異常系（バリデーション）', () => {
+  test('S-29: setSuccessPattern("unknown" as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern('unknown' as any);
+    expect(store.getState().successPattern).toBe('tax');
+  });
+
+  test('S-30: setSuccessPattern("" as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern('' as any);
+    expect(store.getState().successPattern).toBe('tax');
+  });
+
+  test('S-31: setSuccessPattern(null as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern(null as any);
+    expect(store.getState().successPattern).toBe('tax');
+  });
+
+  test('S-32: setSuccessPattern(undefined as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern(undefined as any);
+    expect(store.getState().successPattern).toBe('tax');
+  });
+});
+
+// =============================================================================
+// successPattern persist 永続化テスト
+// =============================================================================
+
+describe('useMockStore - successPattern persist永続化', () => {
+  test('S-33: successPattern が localStorage に保存される（永続化対象）', async () => {
+    const store = await getStore();
+    store.getState().setSuccessPattern('autoDebit');
+
+    const raw = localStorage.getItem('phoneqr-store');
+    expect(raw).not.toBeNull();
+
+    const parsed = JSON.parse(raw!);
+    expect(parsed.state.successPattern).toBe('autoDebit');
+  });
+
+  test('S-34: localStorage に保存済みの successPattern: "autoDebit" がstore初期化時に復元される', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'standard',
+          successPattern: 'autoDebit',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.successPattern).toBe('autoDebit');
+  });
+
+  test('S-35: localStorage の successPattern が無効値の場合、"tax" で初期化される（merge関数バリデーション）', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'standard',
+          successPattern: 'invalid-pattern',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.successPattern).toBe('tax');
+  });
+});
+
+// =============================================================================
+// 独立バリデーション（C-4対応: 各フィールドが独立してバリデーション）
+// =============================================================================
+
+describe('useMockStore - 独立バリデーション（C-4対応）', () => {
+  test('S-36: scannerPatternが正常値 + successPatternが不正値の場合、scannerPatternは維持、successPatternのみ"tax"にフォールバック', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'neon',
+          successPattern: 'invalid-pattern',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.scannerPattern).toBe('neon');
+    expect(state.successPattern).toBe('tax');
+  });
+
+  test('S-37: scannerPatternが不正値 + successPatternが正常値の場合、scannerPatternのみデフォルトにフォールバック、successPatternは維持', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'invalid-pattern',
+          successPattern: 'autoDebit',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.scannerPattern).toBe('standard');
+    expect(state.successPattern).toBe('autoDebit');
+  });
+});

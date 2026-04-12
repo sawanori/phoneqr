@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMockStore } from '@/store/useMockStore';
-import type { ScannerPattern } from '@/store/useMockStore';
+import type { ScannerPattern, SuccessPattern } from '@/store/useMockStore';
 import { Settings } from 'lucide-react';
 
 const SCANNER_PATTERNS: { id: ScannerPattern; name: string; icon: (color: string) => React.ReactNode }[] = [
@@ -50,6 +50,31 @@ const SCANNER_PATTERNS: { id: ScannerPattern; name: string; icon: (color: string
   },
 ];
 
+const SUCCESS_PATTERNS: { id: SuccessPattern; name: string; icon: (color: string) => React.ReactNode }[] = [
+  {
+    id: 'tax',
+    name: '納税完了',
+    icon: (color) => (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="10" stroke={color} strokeWidth="2" />
+        <path d="M11 16.5l3.5 3.5 6.5-7" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    id: 'autoDebit',
+    name: '自動引落',
+    icon: (color) => (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <rect x="6" y="14" width="20" height="12" stroke={color} strokeWidth="2" />
+        <path d="M4 14h24M16 6l12 8H4l12-8z" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+        <rect x="11" y="18" width="4" height="8" stroke={color} strokeWidth="1.5" />
+        <rect x="17" y="18" width="4" height="8" stroke={color} strokeWidth="1.5" />
+      </svg>
+    ),
+  },
+];
+
 const PRESET_COLORS = [
   { name: '赤（デフォルト）', hex: '#ff0033' },
   { name: '青', hex: '#0066ff' },
@@ -68,10 +93,12 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
   const amount = useMockStore((s) => s.amount);
   const shopName = useMockStore((s) => s.shopName);
   const scannerPattern = useMockStore((s) => s.scannerPattern);
+  const successPattern = useMockStore((s) => s.successPattern);
   const setThemeColor = useMockStore((s) => s.setThemeColor);
   const setAmount = useMockStore((s) => s.setAmount);
   const setShopName = useMockStore((s) => s.setShopName);
   const setScannerPattern = useMockStore((s) => s.setScannerPattern);
+  const setSuccessPattern = useMockStore((s) => s.setSuccessPattern);
 
   const [hexInput, setHexInput] = useState(themeColor);
 
@@ -145,6 +172,36 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
                         style={isSelected ? { borderColor: themeColor, color: themeColor } : {}}
                       >
                         {/* ミニプレビュー */}
+                        <div className="w-full h-12 rounded-lg bg-[#1a1a1a] flex items-center justify-center overflow-hidden">
+                          {icon(themeColor)}
+                        </div>
+                        <span className={`text-xs font-medium ${isSelected ? '' : 'text-gray-600'}`}>
+                          {name}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 決済完了パターン選択 */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  決済完了パターン
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {SUCCESS_PATTERNS.map(({ id, name, icon }) => {
+                    const isSelected = successPattern === id;
+                    return (
+                      <button
+                        key={id}
+                        data-testid={`success-pattern-${id}`}
+                        onClick={() => setSuccessPattern(id)}
+                        className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all ${
+                          isSelected ? 'border-current ring-2 ring-offset-1' : 'border-gray-200 bg-gray-50'
+                        }`}
+                        style={isSelected ? { borderColor: themeColor, color: themeColor } : {}}
+                      >
                         <div className="w-full h-12 rounded-lg bg-[#1a1a1a] flex items-center justify-center overflow-hidden">
                           {icon(themeColor)}
                         </div>
