@@ -18,6 +18,10 @@ jest.mock('framer-motion', () => ({
       const { initial, animate, exit, transition, ...rest } = props;
       return <button {...rest}>{children}</button>;
     },
+    li: ({ children, ...props }: any) => {
+      const { initial, animate, exit, transition, ...rest } = props;
+      return <li {...rest}>{children}</li>;
+    },
     svg: ({ children, ...props }: any) => <svg {...props}>{children}</svg>,
     circle: (props: any) => <circle {...props} />,
     path: (props: any) => <path {...props} />,
@@ -188,13 +192,18 @@ describe('AutoDebitSuccessView', () => {
   });
 
   // インタラクション
-  describe('AD-11: 戻るボタン', () => {
-    it('「スキャンを続ける」ボタンタップでsetCurrentView("scanner")が呼ばれる', async () => {
+  describe('AD-11: 画面タップで戻る', () => {
+    it('画面のどこをタップしてもsetCurrentView("scanner")が呼ばれる', async () => {
       render(<AutoDebitSuccessView />);
-      const button = screen.getByText('スキャンを続ける');
-      fireEvent.click(button);
-      expect(mockSetCurrentView).toHaveBeenCalledTimes(1);
+      // ルート要素（role="button"）をクリック
+      const rootButton = screen.getByRole('button');
+      fireEvent.click(rootButton);
       expect(mockSetCurrentView).toHaveBeenCalledWith('scanner');
+    });
+
+    it('「スキャンを続ける」ボタンが存在しない', async () => {
+      render(<AutoDebitSuccessView />);
+      expect(screen.queryByText('スキャンを続ける')).not.toBeInTheDocument();
     });
   });
 
