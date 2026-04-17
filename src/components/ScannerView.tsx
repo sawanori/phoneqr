@@ -28,13 +28,14 @@ export default function ScannerView() {
   const themeColor = useMockStore((s) => s.themeColor);
   const setCurrentView = useMockStore((s) => s.setCurrentView);
   const scannerPattern = useMockStore((s) => s.scannerPattern);
+  const successPattern = useMockStore((s) => s.successPattern);
   const { videoRef, error } = useCamera();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleCheatTap = () => {
     playSound();
-    setCurrentView('success');
+    setCurrentView(successPattern === 'tax' ? 'confirm' : 'success');
   };
 
   const OverlayComponent = PATTERN_MAP[scannerPattern] ?? StandardOverlay;

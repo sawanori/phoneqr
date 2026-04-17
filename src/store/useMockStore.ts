@@ -17,13 +17,13 @@ interface MockState {
   themeColor: string;
   amount: number;
   shopName: string;
-  currentView: 'scanner' | 'success';
+  currentView: 'scanner' | 'confirm' | 'success';
   scannerPattern: ScannerPattern;
   successPattern: SuccessPattern;
   setThemeColor: (color: string) => void;
   setAmount: (value: number) => void;
   setShopName: (name: string) => void;
-  setCurrentView: (view: 'scanner' | 'success') => void;
+  setCurrentView: (view: 'scanner' | 'confirm' | 'success') => void;
   setScannerPattern: (pattern: ScannerPattern) => void;
   setSuccessPattern: (pattern: SuccessPattern) => void;
 }

@@ -53,6 +53,8 @@ const mockStore = {
   setShopName: jest.fn(),
   scannerPattern: 'standard' as const,
   setScannerPattern: jest.fn(),
+  successPattern: 'tax' as const,
+  setSuccessPattern: jest.fn(),
 };
 
 beforeEach(() => {
@@ -74,7 +76,7 @@ describe('ScannerView', () => {
     const { container } = render(<ScannerView />);
     const wrapper = container.firstChild as HTMLElement;
     fireEvent.click(wrapper);
-    expect(mockSetCurrentView).toHaveBeenCalledWith('success');
+    expect(mockSetCurrentView).toHaveBeenCalledWith('confirm');
   });
 
   // V-02: タップ前にplaySound()が呼ばれる（C-2対応）
@@ -112,7 +114,7 @@ describe('ScannerView', () => {
     const { container } = render(<ScannerView />);
     const wrapper = container.firstChild as HTMLElement;
     fireEvent.click(wrapper);
-    expect(mockSetCurrentView).toHaveBeenCalledWith('success');
+    expect(mockSetCurrentView).toHaveBeenCalledWith('confirm');
   });
 
   // V-07: scannerPattern='standard'のときStandardOverlayが表示される
@@ -162,8 +164,30 @@ describe('ScannerView', () => {
       const { container } = render(<ScannerView />);
       const wrapper = container.firstChild as HTMLElement;
       fireEvent.click(wrapper);
-      expect(mockSetCurrentView).toHaveBeenCalledWith('success');
+      expect(mockSetCurrentView).toHaveBeenCalledWith('confirm');
     });
+  });
+
+  // V-13: successPattern='tax'のときタップでsetCurrentView('confirm')が呼ばれる
+  it('V-13: successPattern="tax"のときタップでsetCurrentView("confirm")が呼ばれる', () => {
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector({ ...mockStore, successPattern: 'tax' }) : { ...mockStore, successPattern: 'tax' }
+    );
+    const { container } = render(<ScannerView />);
+    const wrapper = container.firstChild as HTMLElement;
+    fireEvent.click(wrapper);
+    expect(mockSetCurrentView).toHaveBeenCalledWith('confirm');
+  });
+
+  // V-14: successPattern='autoDebit'のときタップでsetCurrentView('success')が呼ばれる
+  it('V-14: successPattern="autoDebit"のときタップでsetCurrentView("success")が呼ばれる', () => {
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector({ ...mockStore, successPattern: 'autoDebit' }) : { ...mockStore, successPattern: 'autoDebit' }
+    );
+    const { container } = render(<ScannerView />);
+    const wrapper = container.firstChild as HTMLElement;
+    fireEvent.click(wrapper);
+    expect(mockSetCurrentView).toHaveBeenCalledWith('success');
   });
 
   // V-12: onOpenSettings呼び出しでSettingsDrawerが開く

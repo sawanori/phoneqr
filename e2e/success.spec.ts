@@ -4,8 +4,12 @@ test.describe('決済完了画面', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForTimeout(1000);
-    // スキャン画面からタップで遷移
+    // スキャン画面からタップで確認画面に遷移
     await page.click('body', { position: { x: 187, y: 300 } });
+    await page.waitForTimeout(500);
+    // 確認画面でチェック＋支払うボタンクリック
+    await page.getByText('支払い内容を確認しました').click();
+    await page.getByText('支払う').click();
     await page.waitForTimeout(500);
   });
 
@@ -14,7 +18,7 @@ test.describe('決済完了画面', () => {
   });
 
   test('店舗名が表示される', async ({ page }) => {
-    await expect(page.getByText(/NonTurn Cafe/)).toBeVisible();
+    await expect(page.getByText(/東京都/)).toBeVisible();
   });
 
   test('チェックマークアニメーションが表示される', async ({ page }) => {
@@ -31,12 +35,16 @@ test.describe('決済完了画面', () => {
     await expect(page.getByText('コード支払い')).toBeVisible({ timeout: 3000 });
   });
 
-  test('スキャン↔決済の往復遷移が正常に動作する', async ({ page }) => {
+  test('スキャン↔確認↔決済の往復遷移が正常に動作する', async ({ page }) => {
     // 決済完了 → スキャンに戻る
     await page.getByText('スキャンを続ける').click();
     await expect(page.getByText('コード支払い')).toBeVisible({ timeout: 3000 });
-    // 再度タップで決済完了
+    // 再度タップで確認画面
     await page.click('body', { position: { x: 187, y: 300 } });
+    await expect(page.getByText('支払い内容を確認しました')).toBeVisible({ timeout: 3000 });
+    // 確認画面からの遷移
+    await page.getByText('支払い内容を確認しました').click();
+    await page.getByText('支払う').click();
     await expect(page.getByText('¥1,500')).toBeVisible({ timeout: 3000 });
   });
 });

@@ -53,6 +53,12 @@ describe('useMockStore - 正常系', () => {
     store.getState().setCurrentView('success');
     expect(store.getState().currentView).toBe('success');
   });
+
+  test('S-05b: setCurrentView("confirm") で currentView が "confirm" に変わる', async () => {
+    const store = await getStore();
+    store.getState().setCurrentView('confirm');
+    expect(store.getState().currentView).toBe('confirm');
+  });
 });
 
 // =============================================================================

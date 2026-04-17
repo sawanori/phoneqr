@@ -20,12 +20,13 @@ test.describe('スキャン画面', () => {
     await expect(page.getByText('QRコードを枠内に収めてください')).toBeVisible();
   });
 
-  test('画面タップで決済完了画面に遷移する', async ({ page }) => {
+  test('画面タップで確認画面に遷移する', async ({ page }) => {
     // スキャン画面の中央あたりをクリック
     await page.click('body', { position: { x: 187, y: 300 } });
-    // 決済完了画面の要素を確認
+    // 確認画面の要素を確認
     await expect(page.getByText('¥1,500')).toBeVisible({ timeout: 3000 });
-    await expect(page.getByText(/支払い先/)).toBeVisible();
+    await expect(page.getByText('支払い内容を確認しました')).toBeVisible();
+    await expect(page.getByText('支払う')).toBeVisible();
   });
 
   test('ボトムナビゲーションバーが存在する', async ({ page }) => {
