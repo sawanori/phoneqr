@@ -25,14 +25,18 @@ export function PaymentConfirmView() {
 
   return (
     <div className="w-full h-[100dvh] flex flex-col items-center justify-center bg-gradient-to-b from-gray-50 to-white gap-6 px-6">
-      {/* 金額表示 */}
-      <motion.p
-        className="text-4xl font-bold text-gray-900 font-amount"
+      {/* 金額表示（上下に横線で強調） */}
+      <motion.div
+        className="w-full max-w-xs flex flex-col items-center gap-3"
         {...fadeInUp}
         transition={{ delay: 0.1, duration: 0.4 }}
       >
-        ¥{amount.toLocaleString()}
-      </motion.p>
+        <div className="w-full h-[2px]" style={{ backgroundColor: themeColor }} />
+        <p className="text-4xl font-bold text-gray-900 font-amount">
+          ¥{amount.toLocaleString()}
+        </p>
+        <div className="w-full h-[2px]" style={{ backgroundColor: themeColor }} />
+      </motion.div>
 
       {/* 店舗名表示 */}
       <motion.p
