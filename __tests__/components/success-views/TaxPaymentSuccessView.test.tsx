@@ -59,9 +59,9 @@ describe('TaxPaymentSuccessView', () => {
   });
 
   describe('TV-02: 店舗名表示', () => {
-    it('「納税先: {shopName}」が表示される', () => {
+    it('「納付先: {shopName}」が表示される', () => {
       render(<TaxPaymentSuccessView />);
-      expect(screen.getByText('納税先: 東京都')).toBeInTheDocument();
+      expect(screen.getByText('納付先: 東京都')).toBeInTheDocument();
     });
   });
 
@@ -102,13 +102,13 @@ describe('TaxPaymentSuccessView', () => {
   });
 
   describe('TV-07: エッジケース - shopName=""', () => {
-    it('shopNameが空文字でも「納税先: 」が表示されクラッシュしない', () => {
+    it('shopNameが空文字でも「納付先: 」が表示されクラッシュしない', () => {
       const customState = { ...defaultMockState, shopName: '' };
       (useMockStore as unknown as jest.Mock).mockImplementation((selector: any) =>
         selector ? selector(customState) : customState
       );
       render(<TaxPaymentSuccessView />);
-      expect(screen.getByText(/納税先/)).toBeInTheDocument();
+      expect(screen.getByText(/納付先/)).toBeInTheDocument();
     });
   });
 });

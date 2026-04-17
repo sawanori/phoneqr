@@ -87,7 +87,7 @@ export function TaxPaymentSuccessView() {
         {...fadeInUp}
         transition={{ delay: 0.65, duration: 0.4 }}
       >
-        納税先: {shopName}
+        納付先: {shopName}
       </motion.p>
 
       {/* 区切り線 */}

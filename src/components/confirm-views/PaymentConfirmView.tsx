@@ -40,7 +40,7 @@ export function PaymentConfirmView() {
         {...fadeInUp}
         transition={{ delay: 0.2, duration: 0.4 }}
       >
-        支払い先: {shopName}
+        納付先: {shopName}
       </motion.p>
 
       {/* 区切り線 */}

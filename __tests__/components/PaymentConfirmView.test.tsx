@@ -37,9 +37,9 @@ describe('PaymentConfirmView', () => {
   });
 
   // CF-02: 店舗名が正しく表示される
-  it('CF-02: 店舗名が「支払い先: 東京都」として表示される', () => {
+  it('CF-02: 店舗名が「納付先: 東京都」として表示される', () => {
     render(<PaymentConfirmView />);
-    expect(screen.getByText('支払い先: 東京都')).toBeInTheDocument();
+    expect(screen.getByText('納付先: 東京都')).toBeInTheDocument();
   });
 
   // CF-03: チェックボックスが初期状態で未チェック
