@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Landmark } from 'lucide-react';
 import { useMockStore } from '@/store/useMockStore';
@@ -32,28 +31,11 @@ const RING_PULSE = {
   },
 };
 
-// 口座番号は固定値（C-6対応）
-const MASKED_ACCOUNT = '****1234';
-
 export function AutoDebitSuccessView() {
   const themeColor = useMockStore((state) => state.themeColor);
   const amount = useMockStore((state) => state.amount);
   const shopName = useMockStore((state) => state.shopName);
   const setCurrentView = useMockStore((state) => state.setCurrentView);
-
-  const [mounted, setMounted] = useState(false);
-  const [debitDate, setDebitDate] = useState<string>('');
-  const [txId, setTxId] = useState<string>('');
-
-  useEffect(() => {
-    const now = new Date();
-    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 27);
-    setDebitDate(
-      `${nextMonth.getFullYear()}/${String(nextMonth.getMonth() + 1).padStart(2, '0')}/27`
-    );
-    setTxId(Math.random().toString(36).slice(2, 10).toUpperCase());
-    setMounted(true);
-  }, []);
 
   const handleReturnToScanner = () => {
     setCurrentView('scanner');
@@ -130,46 +112,6 @@ export function AutoDebitSuccessView() {
       >
         引き落とし先: {shopName}
       </motion.p>
-
-      {/* 追加情報カード（マウント後のみ表示: Hydration対策） */}
-      {mounted && (
-        <motion.div
-          className="bg-gray-100/50 rounded-2xl p-4 w-full max-w-xs"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.05, duration: 0.5, ease: 'easeOut' }}
-        >
-          <ul className="flex flex-col gap-2">
-            <motion.li
-              className="flex justify-between text-sm text-gray-600"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.2, duration: 0.3 }}
-            >
-              <span>引き落とし予定日</span>
-              <span>{debitDate}</span>
-            </motion.li>
-            <motion.li
-              className="flex justify-between text-sm text-gray-600"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.3, duration: 0.3 }}
-            >
-              <span>取引番号:</span>
-              <span>{txId}</span>
-            </motion.li>
-            <motion.li
-              className="flex justify-between text-sm text-gray-600"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1.4, duration: 0.3 }}
-            >
-              <span>口座番号</span>
-              <span>{MASKED_ACCOUNT}</span>
-            </motion.li>
-          </ul>
-        </motion.div>
-      )}
 
       {/* タップヒント */}
       <motion.p

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { useMockStore } from '@/store/useMockStore';
 import { AutoDebitSuccessView } from '@/components/success-views/AutoDebitSuccessView';
 
@@ -95,99 +95,6 @@ describe('AutoDebitSuccessView', () => {
                  (el as HTMLElement).getAttribute('style')?.includes('#ff0033')
       );
       expect(hasThemeColor).toBe(true);
-    });
-  });
-
-  // 引き落とし予定日（fakeTimers使用: C-7対応）
-  describe('AD-06: 引き落とし予定日 - 通常月', () => {
-    beforeEach(() => {
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2026-04-10T12:00:00').getTime());
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    it('2026-04-10設定 → 「2026/05/27」が表示される', async () => {
-      render(<AutoDebitSuccessView />);
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      await waitFor(() => {
-        expect(screen.getByText('2026/05/27')).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('AD-07: 引き落とし予定日 - 12月跨ぎ', () => {
-    beforeEach(() => {
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2026-12-15T12:00:00').getTime());
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    it('2026-12-15設定 → 「2027/01/27」が表示される', async () => {
-      render(<AutoDebitSuccessView />);
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      await waitFor(() => {
-        expect(screen.getByText('2027/01/27')).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('AD-08: 引き落とし予定日 - 月末', () => {
-    beforeEach(() => {
-      jest.useFakeTimers();
-      jest.setSystemTime(new Date('2026-01-31T12:00:00').getTime());
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
-    });
-
-    it('2026-01-31設定 → 「2026/02/27」が表示される', async () => {
-      render(<AutoDebitSuccessView />);
-      await act(async () => {
-        jest.runAllTimers();
-      });
-      await waitFor(() => {
-        expect(screen.getByText('2026/02/27')).toBeInTheDocument();
-      });
-    });
-  });
-
-  // ダミー情報
-  describe('AD-09: 取引番号', () => {
-    it('「取引番号:」ラベルと8桁英数字の値が表示される', async () => {
-      render(<AutoDebitSuccessView />);
-      await waitFor(() => {
-        // 「取引番号:」ラベルが存在することを確認
-        const labelElement = screen.getByText(/取引番号/);
-        expect(labelElement).toBeInTheDocument();
-
-        // 取引番号の値（8桁英数字）が存在することを確認
-        // liの親要素のtextContentを結合して確認
-        const liElement = labelElement.closest('li');
-        expect(liElement).not.toBeNull();
-        const liText = liElement?.textContent || '';
-        const match = liText.match(/[A-Z0-9]{8}/);
-        expect(match).not.toBeNull();
-      });
-    });
-  });
-
-  describe('AD-10: 口座番号', () => {
-    it('口座番号が****1234と固定値で表示される', async () => {
-      render(<AutoDebitSuccessView />);
-      await waitFor(() => {
-        expect(screen.getByText('****1234')).toBeInTheDocument();
-      });
     });
   });
 
