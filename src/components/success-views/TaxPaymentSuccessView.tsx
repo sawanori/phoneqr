@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useMockStore } from '@/store/useMockStore';
 
@@ -28,15 +27,6 @@ export function TaxPaymentSuccessView() {
   const amount = useMockStore((state) => state.amount);
   const shopName = useMockStore((state) => state.shopName);
   const setCurrentView = useMockStore((state) => state.setCurrentView);
-
-  const dateStr = useMemo(() => {
-    const now = new Date();
-    return `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-  }, []);
-
-  const txId = useMemo(() => {
-    return Math.random().toString(36).slice(2, 10).toUpperCase();
-  }, []);
 
   const handleContinue = () => {
     setCurrentView('scanner');
@@ -89,19 +79,6 @@ export function TaxPaymentSuccessView() {
       >
         納付先: {shopName}
       </motion.p>
-
-      {/* 区切り線 */}
-      <div className="w-full max-w-xs border-t border-gray-200" />
-
-      {/* 日時・取引番号 */}
-      <motion.div
-        className="flex flex-col items-center gap-1"
-        {...fadeInUp}
-        transition={{ delay: 0.75, duration: 0.4 }}
-      >
-        <p className="text-sm text-gray-400">{dateStr}</p>
-        <p className="text-sm text-gray-400">取引番号: {txId}</p>
-      </motion.div>
 
       {/* スキャンを続けるボタン */}
       <motion.button
