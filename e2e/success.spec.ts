@@ -7,8 +7,7 @@ test.describe('決済完了画面', () => {
     // スキャン画面からタップで確認画面に遷移
     await page.click('body', { position: { x: 187, y: 300 } });
     await page.waitForTimeout(500);
-    // 確認画面でチェック＋支払うボタンクリック
-    await page.getByText('支払い内容を確認しました').click();
+    // 確認画面で支払うボタンクリック
     await page.getByText('支払う').click();
     await page.waitForTimeout(500);
   });
@@ -41,9 +40,8 @@ test.describe('決済完了画面', () => {
     await expect(page.getByText('コード支払い')).toBeVisible({ timeout: 3000 });
     // 再度タップで確認画面
     await page.click('body', { position: { x: 187, y: 300 } });
-    await expect(page.getByText('支払い内容を確認しました')).toBeVisible({ timeout: 3000 });
+    await expect(page.getByText('支払う')).toBeVisible({ timeout: 3000 });
     // 確認画面からの遷移
-    await page.getByText('支払い内容を確認しました').click();
     await page.getByText('支払う').click();
     await expect(page.getByText('¥1,500')).toBeVisible({ timeout: 3000 });
   });

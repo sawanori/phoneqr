@@ -25,7 +25,6 @@ test.describe('スキャン画面', () => {
     await page.click('body', { position: { x: 187, y: 300 } });
     // 確認画面の要素を確認
     await expect(page.getByText('¥1,500')).toBeVisible({ timeout: 3000 });
-    await expect(page.getByText('支払い内容を確認しました')).toBeVisible();
     await expect(page.getByText('支払う')).toBeVisible();
   });
 
