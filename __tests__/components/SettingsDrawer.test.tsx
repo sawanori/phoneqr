@@ -22,6 +22,7 @@ const mockSetAmount = jest.fn();
 const mockSetShopName = jest.fn();
 const mockSetScannerPattern = jest.fn();
 const mockSetSuccessPattern = jest.fn();
+const mockSetTaxLabel = jest.fn();
 
 const defaultMockState = {
   themeColor: '#ff0033',
@@ -36,6 +37,8 @@ const defaultMockState = {
   setScannerPattern: mockSetScannerPattern,
   successPattern: 'tax' as const,
   setSuccessPattern: mockSetSuccessPattern,
+  taxLabel: 'tax' as const,
+  setTaxLabel: mockSetTaxLabel,
 };
 
 beforeEach(() => {
@@ -249,5 +252,52 @@ describe('SettingsDrawer', () => {
 
     fireEvent.click(screen.getByTestId('success-pattern-tax'));
     expect(mockSetSuccessPattern).toHaveBeenCalledWith('tax');
+  });
+
+  // ---- 納税ラベル ----
+
+  it('D-TL-1: ドロワー内に「納税ラベル」セクションが存在する', () => {
+    renderOpen();
+    expect(screen.getByText('納税ラベル')).toBeInTheDocument();
+  });
+
+  it('D-TL-2: 納税ラベル選択ボタンが2つ存在する（tax-label-tax, tax-label-payment）', () => {
+    renderOpen();
+
+    expect(screen.getByTestId('tax-label-tax')).toBeInTheDocument();
+    expect(screen.getByTestId('tax-label-payment')).toBeInTheDocument();
+  });
+
+  it('D-TL-3: taxLabelが"tax"のとき、tax-label-taxボタンがthemeColorのborderColorを持つ', () => {
+    renderOpen();
+
+    const taxBtn = screen.getByTestId('tax-label-tax');
+    expect(taxBtn).toHaveStyle({ borderColor: '#ff0033' });
+  });
+
+  it('D-TL-4: tax-label-paymentボタンクリックでsetTaxLabel("payment")が呼ばれる', () => {
+    renderOpen();
+
+    fireEvent.click(screen.getByTestId('tax-label-payment'));
+    expect(mockSetTaxLabel).toHaveBeenCalledWith('payment');
+  });
+
+  it('D-TL-5: tax-label-taxボタンクリックでsetTaxLabel("tax")が呼ばれる', () => {
+    renderOpen();
+
+    fireEvent.click(screen.getByTestId('tax-label-tax'));
+    expect(mockSetTaxLabel).toHaveBeenCalledWith('tax');
+  });
+
+  it('D-TL-6: taxLabelが"payment"のとき、tax-label-paymentボタンが選択スタイルを持つ', () => {
+    const customState = { ...defaultMockState, taxLabel: 'payment' as const };
+    (useMockStore as unknown as jest.Mock).mockImplementation((selector) =>
+      selector ? selector(customState) : customState
+    );
+
+    renderOpen();
+
+    const paymentBtn = screen.getByTestId('tax-label-payment');
+    expect(paymentBtn).toHaveStyle({ borderColor: '#ff0033' });
   });
 });

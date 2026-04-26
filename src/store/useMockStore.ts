@@ -3,15 +3,20 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type ScannerPattern = 'standard' | 'minimal' | 'neon' | 'friendly';
 export type SuccessPattern = 'tax' | 'autoDebit';
+export type TaxLabel = 'tax' | 'payment';
 
 const VALID_SCANNER_PATTERNS: ScannerPattern[] = ['standard', 'minimal', 'neon', 'friendly'];
 const VALID_SUCCESS_PATTERNS: SuccessPattern[] = ['tax', 'autoDebit'];
+const VALID_TAX_LABELS: TaxLabel[] = ['tax', 'payment'];
 
 const isValidScannerPattern = (pattern: unknown): pattern is ScannerPattern =>
   VALID_SCANNER_PATTERNS.includes(pattern as ScannerPattern);
 
 const isValidSuccessPattern = (pattern: unknown): pattern is SuccessPattern =>
   VALID_SUCCESS_PATTERNS.includes(pattern as SuccessPattern);
+
+const isValidTaxLabel = (label: unknown): label is TaxLabel =>
+  VALID_TAX_LABELS.includes(label as TaxLabel);
 
 interface MockState {
   themeColor: string;
@@ -20,18 +25,21 @@ interface MockState {
   currentView: 'scanner' | 'confirm' | 'success';
   scannerPattern: ScannerPattern;
   successPattern: SuccessPattern;
+  taxLabel: TaxLabel;
   setThemeColor: (color: string) => void;
   setAmount: (value: number) => void;
   setShopName: (name: string) => void;
   setCurrentView: (view: 'scanner' | 'confirm' | 'success') => void;
   setScannerPattern: (pattern: ScannerPattern) => void;
   setSuccessPattern: (pattern: SuccessPattern) => void;
+  setTaxLabel: (label: TaxLabel) => void;
 }
 
 const HEX_REGEX = /^#[0-9a-fA-F]{6}$/;
 const DEFAULT_THEME_COLOR = '#ff0033';
 const DEFAULT_SCANNER_PATTERN: ScannerPattern = 'standard';
 const DEFAULT_SUCCESS_PATTERN: SuccessPattern = 'tax';
+const DEFAULT_TAX_LABEL: TaxLabel = 'tax';
 
 export const useMockStore = create<MockState>()(
   persist(
@@ -42,6 +50,7 @@ export const useMockStore = create<MockState>()(
       currentView: 'scanner',
       scannerPattern: DEFAULT_SCANNER_PATTERN,
       successPattern: DEFAULT_SUCCESS_PATTERN,
+      taxLabel: DEFAULT_TAX_LABEL,
       setThemeColor: (color) =>
         set({ themeColor: HEX_REGEX.test(color) ? color : DEFAULT_THEME_COLOR }),
       setAmount: (value) =>
@@ -52,6 +61,8 @@ export const useMockStore = create<MockState>()(
         set({ scannerPattern: isValidScannerPattern(pattern) ? pattern : DEFAULT_SCANNER_PATTERN }),
       setSuccessPattern: (pattern) =>
         set({ successPattern: isValidSuccessPattern(pattern) ? pattern : DEFAULT_SUCCESS_PATTERN }),
+      setTaxLabel: (label) =>
+        set({ taxLabel: isValidTaxLabel(label) ? label : DEFAULT_TAX_LABEL }),
     }),
     {
       name: 'phoneqr-store',
@@ -63,6 +74,7 @@ export const useMockStore = create<MockState>()(
         shopName: state.shopName,
         scannerPattern: state.scannerPattern,
         successPattern: state.successPattern,
+        taxLabel: state.taxLabel,
       }),
       // localStorageから復元した各パターンが無効値の場合はデフォルトにフォールバック
       merge: (persistedState, currentState) => {
@@ -76,6 +88,9 @@ export const useMockStore = create<MockState>()(
           successPattern: isValidSuccessPattern(persisted.successPattern)
             ? persisted.successPattern
             : DEFAULT_SUCCESS_PATTERN,
+          taxLabel: isValidTaxLabel(persisted.taxLabel)
+            ? persisted.taxLabel
+            : DEFAULT_TAX_LABEL,
         };
       },
     }

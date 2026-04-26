@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMockStore } from '@/store/useMockStore';
-import type { ScannerPattern, SuccessPattern } from '@/store/useMockStore';
+import type { ScannerPattern, SuccessPattern, TaxLabel } from '@/store/useMockStore';
 import { Settings } from 'lucide-react';
 
 const SCANNER_PATTERNS: { id: ScannerPattern; name: string; icon: (color: string) => React.ReactNode }[] = [
@@ -75,6 +75,11 @@ const SUCCESS_PATTERNS: { id: SuccessPattern; name: string; icon: (color: string
   },
 ];
 
+const TAX_LABELS: { id: TaxLabel; name: string }[] = [
+  { id: 'tax', name: '納税' },
+  { id: 'payment', name: '納付' },
+];
+
 const PRESET_COLORS = [
   { name: '赤（デフォルト）', hex: '#ff0033' },
   { name: '青', hex: '#0066ff' },
@@ -94,11 +99,13 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
   const shopName = useMockStore((s) => s.shopName);
   const scannerPattern = useMockStore((s) => s.scannerPattern);
   const successPattern = useMockStore((s) => s.successPattern);
+  const taxLabel = useMockStore((s) => s.taxLabel);
   const setThemeColor = useMockStore((s) => s.setThemeColor);
   const setAmount = useMockStore((s) => s.setAmount);
   const setShopName = useMockStore((s) => s.setShopName);
   const setScannerPattern = useMockStore((s) => s.setScannerPattern);
   const setSuccessPattern = useMockStore((s) => s.setSuccessPattern);
+  const setTaxLabel = useMockStore((s) => s.setTaxLabel);
 
   const [hexInput, setHexInput] = useState(themeColor);
 
@@ -206,6 +213,33 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
                           {icon(themeColor)}
                         </div>
                         <span className={`text-xs font-medium ${isSelected ? '' : 'text-gray-600'}`}>
+                          {name}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 納税ラベル */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  納税ラベル
+                </label>
+                <div className="grid grid-cols-2 gap-2">
+                  {TAX_LABELS.map(({ id, name }) => {
+                    const isSelected = taxLabel === id;
+                    return (
+                      <button
+                        key={id}
+                        data-testid={`tax-label-${id}`}
+                        onClick={() => setTaxLabel(id)}
+                        className={`flex items-center justify-center p-3 rounded-xl border-2 transition-all ${
+                          isSelected ? 'border-current ring-2 ring-offset-1' : 'border-gray-200 bg-gray-50'
+                        }`}
+                        style={isSelected ? { borderColor: themeColor, color: themeColor } : {}}
+                      >
+                        <span className={`text-sm font-medium ${isSelected ? '' : 'text-gray-600'}`}>
                           {name}
                         </span>
                       </button>

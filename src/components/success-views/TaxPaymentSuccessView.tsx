@@ -26,6 +26,7 @@ export function TaxPaymentSuccessView() {
   const themeColor = useMockStore((state) => state.themeColor);
   const amount = useMockStore((state) => state.amount);
   const shopName = useMockStore((state) => state.shopName);
+  const taxLabel = useMockStore((state) => state.taxLabel);
   const setCurrentView = useMockStore((state) => state.setCurrentView);
 
   const handleContinue = () => {
@@ -40,7 +41,7 @@ export function TaxPaymentSuccessView() {
         {...fadeInUp}
         transition={{ delay: 0.4, duration: 0.4 }}
       >
-        納税完了
+        {taxLabel === 'payment' ? '納付完了' : '納税完了'}
       </motion.p>
 
       {/* チェックマークアニメーション */}

@@ -468,3 +468,124 @@ describe('useMockStore - 独立バリデーション（C-4対応）', () => {
     expect(state.successPattern).toBe('autoDebit');
   });
 });
+
+// =============================================================================
+// taxLabel 正常系
+// =============================================================================
+
+describe('useMockStore - taxLabel 正常系', () => {
+  test('S-38: taxLabelの初期値が"tax"である', async () => {
+    const store = await getStore();
+    expect(store.getState().taxLabel).toBe('tax');
+  });
+
+  test('S-39: setTaxLabel("payment") で taxLabel が "payment" に更新される', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel('payment');
+    expect(store.getState().taxLabel).toBe('payment');
+  });
+
+  test('S-40: setTaxLabel("tax") で taxLabel が "tax" に戻る', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel('payment');
+    store.getState().setTaxLabel('tax');
+    expect(store.getState().taxLabel).toBe('tax');
+  });
+});
+
+// =============================================================================
+// taxLabel 異常系（バリデーション）
+// =============================================================================
+
+describe('useMockStore - taxLabel 異常系（バリデーション）', () => {
+  test('S-41: setTaxLabel("unknown" as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel('unknown' as any);
+    expect(store.getState().taxLabel).toBe('tax');
+  });
+
+  test('S-42: setTaxLabel("" as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel('' as any);
+    expect(store.getState().taxLabel).toBe('tax');
+  });
+
+  test('S-43: setTaxLabel(null as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel(null as any);
+    expect(store.getState().taxLabel).toBe('tax');
+  });
+
+  test('S-44: setTaxLabel(undefined as any) → "tax" にフォールバック', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel(undefined as any);
+    expect(store.getState().taxLabel).toBe('tax');
+  });
+});
+
+// =============================================================================
+// taxLabel persist 永続化テスト
+// =============================================================================
+
+describe('useMockStore - taxLabel persist永続化', () => {
+  test('S-45: taxLabel が localStorage に保存される（永続化対象）', async () => {
+    const store = await getStore();
+    store.getState().setTaxLabel('payment');
+
+    const raw = localStorage.getItem('phoneqr-store');
+    expect(raw).not.toBeNull();
+
+    const parsed = JSON.parse(raw!);
+    expect(parsed.state.taxLabel).toBe('payment');
+  });
+
+  test('S-46: localStorage に保存済みの taxLabel: "payment" がstore初期化時に復元される', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'standard',
+          successPattern: 'tax',
+          taxLabel: 'payment',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.taxLabel).toBe('payment');
+  });
+
+  test('S-47: localStorage の taxLabel が無効値の場合、"tax" で初期化される（merge関数バリデーション）', async () => {
+    localStorage.setItem(
+      'phoneqr-store',
+      JSON.stringify({
+        state: {
+          themeColor: '#ff0033',
+          amount: 1500,
+          shopName: '東京都',
+          scannerPattern: 'standard',
+          successPattern: 'tax',
+          taxLabel: 'invalid-label',
+        },
+        version: 0,
+      })
+    );
+
+    jest.resetModules();
+    const { useMockStore } = await import('../../src/store/useMockStore');
+
+    await new Promise((r) => setTimeout(r, 50));
+
+    const state = useMockStore.getState();
+    expect(state.taxLabel).toBe('tax');
+  });
+});

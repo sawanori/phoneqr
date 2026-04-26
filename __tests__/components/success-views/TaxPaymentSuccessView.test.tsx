@@ -35,12 +35,14 @@ const defaultMockState = {
   currentView: 'success' as const,
   successPattern: 'tax' as const,
   scannerPattern: 'standard' as const,
+  taxLabel: 'tax' as const,
   setCurrentView: mockSetCurrentView,
   setThemeColor: jest.fn(),
   setAmount: jest.fn(),
   setShopName: jest.fn(),
   setScannerPattern: jest.fn(),
   setSuccessPattern: jest.fn(),
+  setTaxLabel: jest.fn(),
 };
 
 beforeEach(() => {
@@ -84,9 +86,19 @@ describe('TaxPaymentSuccessView', () => {
   });
 
   describe('TV-05: 納税完了テキスト', () => {
-    it('「納税完了」テキストが表示される', () => {
+    it('taxLabel="tax"のとき「納税完了」テキストが表示される', () => {
       render(<TaxPaymentSuccessView />);
       expect(screen.getByText('納税完了')).toBeInTheDocument();
+    });
+
+    it('taxLabel="payment"のとき「納付完了」テキストが表示される', () => {
+      const customState = { ...defaultMockState, taxLabel: 'payment' as const };
+      (useMockStore as unknown as jest.Mock).mockImplementation((selector: any) =>
+        selector ? selector(customState) : customState
+      );
+      render(<TaxPaymentSuccessView />);
+      expect(screen.getByText('納付完了')).toBeInTheDocument();
+      expect(screen.queryByText('納税完了')).not.toBeInTheDocument();
     });
   });
 
