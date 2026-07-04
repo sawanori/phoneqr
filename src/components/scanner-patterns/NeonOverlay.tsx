@@ -228,6 +228,8 @@ export default function NeonOverlay({ themeColor, onOpenSettings }: OverlayProps
           borderTop: `1px solid ${themeColor}33`,
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           pointerEvents: 'auto',
+          position: 'relative',
+          zIndex: 20,
         }}
       >
         <div

@@ -117,6 +117,8 @@ export default function MinimalOverlay({ themeColor, onOpenSettings }: OverlayPr
           backgroundColor: 'rgba(0,0,0,0.6)',
           pointerEvents: 'auto',
           cursor: 'pointer',
+          position: 'relative',
+          zIndex: 20,
         }}
         onClick={(e) => { e.stopPropagation(); onOpenSettings(); }}
       >

@@ -155,6 +155,8 @@ export default function StandardOverlay({ themeColor, onOpenSettings }: OverlayP
           borderTop: '1px solid #f3f4f6',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
           pointerEvents: 'auto',
+          position: 'relative',
+          zIndex: 20,
         }}
       >
         <div
