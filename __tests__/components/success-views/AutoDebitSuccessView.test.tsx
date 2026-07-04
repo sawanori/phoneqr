@@ -35,7 +35,7 @@ const mockSetCurrentView = jest.fn();
 const defaultMockState = {
   themeColor: '#ff0033',
   amount: 1500,
-  shopName: '東京都',
+  shopName: '〇〇',
   currentView: 'success' as const,
   successPattern: 'autoDebit' as const,
   scannerPattern: 'standard' as const,
@@ -64,9 +64,9 @@ describe('AutoDebitSuccessView', () => {
   });
 
   describe('AD-02: 引き落とし先表示', () => {
-    it('「引き落とし先: 東京都」が表示される', async () => {
+    it('「引き落とし先: 〇〇」が表示される', async () => {
       render(<AutoDebitSuccessView />);
-      expect(screen.getByText('引き落とし先: 東京都')).toBeInTheDocument();
+      expect(screen.getByText('引き落とし先: 〇〇')).toBeInTheDocument();
     });
   });
 

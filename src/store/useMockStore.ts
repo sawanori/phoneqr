@@ -46,7 +46,7 @@ export const useMockStore = create<MockState>()(
     (set) => ({
       themeColor: DEFAULT_THEME_COLOR,
       amount: 1500,
-      shopName: '東京都',
+      shopName: '〇〇',
       currentView: 'scanner',
       scannerPattern: DEFAULT_SCANNER_PATTERN,
       successPattern: DEFAULT_SUCCESS_PATTERN,

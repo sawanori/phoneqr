@@ -18,7 +18,7 @@ describe('SuccessView ラッパー', () => {
   const createMockState = (successPattern: 'tax' | 'autoDebit' | string) => ({
     themeColor: '#ff0033',
     amount: 1500,
-    shopName: '東京都',
+    shopName: '〇〇',
     currentView: 'success' as const,
     successPattern,
     scannerPattern: 'standard' as const,

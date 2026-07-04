@@ -17,7 +17,7 @@ test.describe('決済完了画面', () => {
   });
 
   test('店舗名が表示される', async ({ page }) => {
-    await expect(page.getByText(/東京都/)).toBeVisible();
+    await expect(page.getByText(/〇〇/)).toBeVisible();
   });
 
   test('チェックマークアニメーションが表示される', async ({ page }) => {

@@ -31,7 +31,7 @@ const mockSetCurrentView = jest.fn();
 const defaultMockState = {
   themeColor: '#ff0033',
   amount: 1500,
-  shopName: '東京都',
+  shopName: '〇〇',
   currentView: 'success' as const,
   successPattern: 'tax' as const,
   scannerPattern: 'standard' as const,
@@ -61,9 +61,9 @@ describe('TaxPaymentSuccessView', () => {
   });
 
   describe('TV-02: 店舗名表示', () => {
-    it('「納付先: {shopName}」が表示される', () => {
+    it('「支払い先: {shopName}」が表示される', () => {
       render(<TaxPaymentSuccessView />);
-      expect(screen.getByText('納付先: 東京都')).toBeInTheDocument();
+      expect(screen.getByText('支払い先: 〇〇')).toBeInTheDocument();
     });
   });
 
@@ -85,20 +85,19 @@ describe('TaxPaymentSuccessView', () => {
     });
   });
 
-  describe('TV-05: 納税完了テキスト', () => {
-    it('taxLabel="tax"のとき「納税完了」テキストが表示される', () => {
+  describe('TV-05: 支払い完了テキスト', () => {
+    it('taxLabel="tax"のとき「支払い完了」テキストが表示される', () => {
       render(<TaxPaymentSuccessView />);
-      expect(screen.getByText('納税完了')).toBeInTheDocument();
+      expect(screen.getByText('支払い完了')).toBeInTheDocument();
     });
 
-    it('taxLabel="payment"のとき「納付完了」テキストが表示される', () => {
+    it('taxLabel="payment"のときも「支払い完了」テキストが表示される', () => {
       const customState = { ...defaultMockState, taxLabel: 'payment' as const };
       (useMockStore as unknown as jest.Mock).mockImplementation((selector: any) =>
         selector ? selector(customState) : customState
       );
       render(<TaxPaymentSuccessView />);
-      expect(screen.getByText('納付完了')).toBeInTheDocument();
-      expect(screen.queryByText('納税完了')).not.toBeInTheDocument();
+      expect(screen.getByText('支払い完了')).toBeInTheDocument();
     });
   });
 
@@ -114,13 +113,13 @@ describe('TaxPaymentSuccessView', () => {
   });
 
   describe('TV-07: エッジケース - shopName=""', () => {
-    it('shopNameが空文字でも「納付先: 」が表示されクラッシュしない', () => {
+    it('shopNameが空文字でも「支払い先: 」が表示されクラッシュしない', () => {
       const customState = { ...defaultMockState, shopName: '' };
       (useMockStore as unknown as jest.Mock).mockImplementation((selector: any) =>
         selector ? selector(customState) : customState
       );
       render(<TaxPaymentSuccessView />);
-      expect(screen.getByText(/納付先/)).toBeInTheDocument();
+      expect(screen.getByText(/支払い先/)).toBeInTheDocument();
     });
   });
 });

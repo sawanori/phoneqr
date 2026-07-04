@@ -26,7 +26,7 @@ describe('useMockStore - 正常系', () => {
 
     expect(state.themeColor).toBe('#ff0033');
     expect(state.amount).toBe(1500);
-    expect(state.shopName).toBe('東京都');
+    expect(state.shopName).toBe('〇〇');
     expect(state.currentView).toBe('scanner');
   });
 
@@ -167,7 +167,7 @@ describe('useMockStore - persist永続化', () => {
     const state = useMockStore.getState();
     expect(state.themeColor).toBe('#ff0033');
     expect(state.amount).toBe(1500);
-    expect(state.shopName).toBe('東京都');
+    expect(state.shopName).toBe('〇〇');
     expect(state.currentView).toBe('scanner');
   });
 });
@@ -254,7 +254,7 @@ describe('useMockStore - scannerPattern persist永続化', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'neon',
         },
         version: 0,
@@ -277,7 +277,7 @@ describe('useMockStore - scannerPattern persist永続化', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'invalid-pattern',
         },
         version: 0,
@@ -371,7 +371,7 @@ describe('useMockStore - successPattern persist永続化', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'standard',
           successPattern: 'autoDebit',
         },
@@ -395,7 +395,7 @@ describe('useMockStore - successPattern persist永続化', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'standard',
           successPattern: 'invalid-pattern',
         },
@@ -425,7 +425,7 @@ describe('useMockStore - 独立バリデーション（C-4対応）', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'neon',
           successPattern: 'invalid-pattern',
         },
@@ -450,7 +450,7 @@ describe('useMockStore - 独立バリデーション（C-4対応）', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'invalid-pattern',
           successPattern: 'autoDebit',
         },
@@ -546,7 +546,7 @@ describe('useMockStore - taxLabel persist永続化', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'standard',
           successPattern: 'tax',
           taxLabel: 'payment',
@@ -571,7 +571,7 @@ describe('useMockStore - taxLabel persist永続化', () => {
         state: {
           themeColor: '#ff0033',
           amount: 1500,
-          shopName: '東京都',
+          shopName: '〇〇',
           scannerPattern: 'standard',
           successPattern: 'tax',
           taxLabel: 'invalid-label',

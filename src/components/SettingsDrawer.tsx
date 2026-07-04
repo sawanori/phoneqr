@@ -53,7 +53,7 @@ const SCANNER_PATTERNS: { id: ScannerPattern; name: string; icon: (color: string
 const SUCCESS_PATTERNS: { id: SuccessPattern; name: string; icon: (color: string) => React.ReactNode }[] = [
   {
     id: 'tax',
-    name: '納税完了',
+    name: '支払い完了',
     icon: (color) => (
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
         <circle cx="16" cy="16" r="10" stroke={color} strokeWidth="2" />
@@ -76,8 +76,8 @@ const SUCCESS_PATTERNS: { id: SuccessPattern; name: string; icon: (color: string
 ];
 
 const TAX_LABELS: { id: TaxLabel; name: string }[] = [
-  { id: 'tax', name: '納税' },
-  { id: 'payment', name: '納付' },
+  { id: 'tax', name: '支払い' },
+  { id: 'payment', name: '支払い' },
 ];
 
 const PRESET_COLORS = [
@@ -221,10 +221,10 @@ export default function SettingsDrawer({ isOpen, onClose }: SettingsDrawerProps)
                 </div>
               </div>
 
-              {/* 納税ラベル */}
+              {/* 支払いラベル */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">
-                  納税ラベル
+                  支払いラベル
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {TAX_LABELS.map(({ id, name }) => {

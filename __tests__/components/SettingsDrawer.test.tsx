@@ -27,7 +27,7 @@ const mockSetTaxLabel = jest.fn();
 const defaultMockState = {
   themeColor: '#ff0033',
   amount: 1500,
-  shopName: '東京都',
+  shopName: '〇〇',
   currentView: 'scanner' as const,
   setCurrentView: jest.fn(),
   setThemeColor: mockSetThemeColor,
@@ -254,14 +254,14 @@ describe('SettingsDrawer', () => {
     expect(mockSetSuccessPattern).toHaveBeenCalledWith('tax');
   });
 
-  // ---- 納税ラベル ----
+  // ---- 支払いラベル ----
 
-  it('D-TL-1: ドロワー内に「納税ラベル」セクションが存在する', () => {
+  it('D-TL-1: ドロワー内に「支払いラベル」セクションが存在する', () => {
     renderOpen();
-    expect(screen.getByText('納税ラベル')).toBeInTheDocument();
+    expect(screen.getByText('支払いラベル')).toBeInTheDocument();
   });
 
-  it('D-TL-2: 納税ラベル選択ボタンが2つ存在する（tax-label-tax, tax-label-payment）', () => {
+  it('D-TL-2: 支払いラベル選択ボタンが2つ存在する（tax-label-tax, tax-label-payment）', () => {
     renderOpen();
 
     expect(screen.getByTestId('tax-label-tax')).toBeInTheDocument();

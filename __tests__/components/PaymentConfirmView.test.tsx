@@ -10,7 +10,7 @@ const mockSetCurrentView = jest.fn();
 const mockStore = {
   themeColor: '#ff0033',
   amount: 1500,
-  shopName: '東京都',
+  shopName: '〇〇',
   currentView: 'confirm' as const,
   setCurrentView: mockSetCurrentView,
   setThemeColor: jest.fn(),
@@ -37,9 +37,9 @@ describe('PaymentConfirmView', () => {
   });
 
   // CF-02: 店舗名が正しく表示される
-  it('CF-02: 店舗名が「納付先: 東京都」として表示される', () => {
+  it('CF-02: 店舗名が「支払い先: 〇〇」として表示される', () => {
     render(<PaymentConfirmView />);
-    expect(screen.getByText('納付先: 東京都')).toBeInTheDocument();
+    expect(screen.getByText('支払い先: 〇〇')).toBeInTheDocument();
   });
 
   // CF-06: ボタンクリックでsetCurrentView('success')が呼ばれる
